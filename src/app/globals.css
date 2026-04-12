@@ -1397,113 +1397,191 @@ main {
 	gap: 20px;
 	background: transparent;
 	max-width: 1100px;
-	margin: 40px auto 0;
+	margin: 56px auto 0;
 }
 .perk {
-	background: var(--white);
-	border: 1px solid rgba(0, 0, 0, 0.06);
+	background: var(--glass-bg);
+	backdrop-filter: blur(var(--glass-blur));
+	-webkit-backdrop-filter: blur(var(--glass-blur));
+	border: 1px solid var(--glass-border-dark);
 	border-radius: var(--radius-md);
 	padding: 36px 28px;
-	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-	transition: transform 0.2s var(--ease-out);
-	will-change: transform;
-	contain: content;
-	position: relative;
+	box-shadow: var(--glass-shadow);
+	transition:
+		transform 0.3s var(--ease-out),
+		box-shadow 0.3s;
 }
-.perk::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
-	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-	border: 1px solid rgba(75, 40, 109, 0.25);
-	opacity: 0;
-	transition: opacity 0.2s var(--ease-out);
-	pointer-events: none;
-	will-change: opacity;
-}
+
 .perk:hover {
-	transform: translate3d(0, -4px, 0);
-}
-.perk:hover::after {
-	opacity: 1;
+	transform: translateY(-4px);
+	box-shadow: var(--glass-shadow-hover), var(--purple-glow);
+	border-color: rgba(75, 40, 109, 0.35);
 }
 .perk-ico {
 	width: 44px;
 	height: 44px;
-	background: rgba(75, 40, 109, 0.06);
+	background: rgba(0, 0, 0, 0.04);
 	border-radius: var(--radius-sm);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin-bottom: 16px;
+	margin-bottom: 18px;
 }
 .perk-ico svg {
-	width: 22px;
-	height: 22px;
-	stroke: var(--ink);
-	fill: none;
-	stroke-width: 1.8;
+	width: 22px !important;
+	height: 22px !important;
+	stroke: #000000 !important;
+	fill: none !important;
+	stroke-width: 2.2 !important;
+	stroke-linecap: round !important;
+	stroke-linejoin: round !important;
 }
 .perk h3 {
 	font-family: var(--font-d);
 	font-size: 1.05rem;
 	font-weight: 700;
 	color: var(--ink);
-	margin-bottom: 10px;
+	margin-bottom: 8px;
 	letter-spacing: -0.01em;
 }
 .perk p {
-	font-size: 0.84rem;
+	font-size: 0.83rem;
 	color: rgba(0, 0, 0, 0.5);
-	line-height: 1.7;
+	line-height: 1.65;
 	font-weight: 300;
 }
 .win-advantage .perk-ico svg {
-	stroke: var(--accent);
+	stroke: #4b286d !important;
+	fill: none !important;
+	stroke-width: 2.2 !important;
+	stroke-linecap: round !important;
+	stroke-linejoin: round !important;
 }
 
 /* Floating Perk Cards â€” Home Advantage Section */
 .home-advantage .perk {
-	animation: perkFloat 4s ease-in-out infinite;
-	will-change: transform;
+	animation: perkFloat 6s ease-in-out infinite;
 }
 .home-advantage .perk:nth-child(1) {
 	animation-delay: 0s;
-	animation-duration: 4s;
+	animation-duration: 6s;
 }
 .home-advantage .perk:nth-child(2) {
-	animation-delay: -0.7s;
-	animation-duration: 4.5s;
+	animation-delay: -1s;
+	animation-duration: 7s;
 }
 .home-advantage .perk:nth-child(3) {
-	animation-delay: -1.3s;
-	animation-duration: 4.2s;
+	animation-delay: -2s;
+	animation-duration: 6.5s;
 }
 .home-advantage .perk:nth-child(4) {
-	animation-delay: -2s;
-	animation-duration: 4.8s;
+	animation-delay: -3s;
+	animation-duration: 7.5s;
 }
 .home-advantage .perk:nth-child(5) {
-	animation-delay: -1s;
-	animation-duration: 4.4s;
+	animation-delay: -1.5s;
+	animation-duration: 6.8s;
 }
 .home-advantage .perk:nth-child(6) {
-	animation-delay: -1.7s;
-	animation-duration: 4.6s;
+	animation-delay: -2.5s;
+	animation-duration: 7.2s;
 }
 @keyframes perkFloat {
 	0%,
 	100% {
-		transform: translate3d(0, 0, 0);
+		transform: translateY(0);
 	}
 	50% {
-		transform: translate3d(0, -6px, 0);
+		transform: translateY(-10px);
 	}
 }
 .home-advantage .perk:hover {
 	animation-play-state: paused;
-	transform: translate3d(0, -4px, 0);
+	transform: translateY(-4px);
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE: Stack grids on mobile ≤ 640px
+───────────────────────────────────────── */
+@media (max-width: 640px) {
+	/* Stack ALL multi-col grids inside pages */
+	.pg [style*="repeat(2,1fr)"],
+	.pg [style*="repeat(2, 1fr)"],
+	.pg [style*="repeat(3,1fr)"],
+	.pg [style*="repeat(3, 1fr)"],
+	.pg [style*="repeat(4,1fr)"],
+	.pg [style*="repeat(4, 1fr)"],
+	.pg [style*="grid-template-columns:1fr 1fr"],
+	.pg [style*="grid-template-columns: 1fr 1fr"],
+	/* Also catch grid patterns anywhere (not just in .pg) */
+	[style*="grid-template-columns:repeat(2,1fr)"],
+	[style*="grid-template-columns:repeat(3,1fr)"],
+	[style*="grid-template-columns:repeat(4,1fr)"],
+	[style*="grid-template-columns: repeat(2, 1fr)"],
+	[style*="grid-template-columns: repeat(3, 1fr)"],
+	[style*="grid-template-columns: repeat(4, 1fr)"] {
+		grid-template-columns: 1fr !important;
+		gap: 20px !important;
+	}
+	/* Home perks grid */
+	.perks-grid {
+		grid-template-columns: repeat(2, 1fr) !important;
+		gap: 20px !important;
+	}
+	/* Home panels - responsive grid */
+	.hm-panel {
+		grid-template-columns: 1fr !important;
+	}
+	[style*="grid-template-columns:repeat"] {
+		grid-template-columns: 1fr !important;
+	}
+	/* Touch-friendly CTAs */
+	.hm-cta-primary,
+	.hm-cta-ghost {
+		font-size: 1rem !important;
+		padding: 16px 32px !important;
+		min-height: 48px !important;
+		line-height: 1.2;
+		min-width: 240px !important;
+		justify-content: center;
+	}
+	.hm-hero-links {
+		padding: 24px 18px 36px !important;
+		gap: 12px !important;
+		flex-wrap: wrap !important;
+		justify-content: center;
+		align-items: center;
+	}
+	/* Product grids */
+	.prod-grid,
+	.proc-row {
+		grid-template-columns: 1fr !important;
+	}
+	/* Season cards */
+	.season-grid {
+		grid-template-columns: 1fr !important;
+	}
+	/* Series grid */
+	.series-grid {
+		grid-template-columns: 1fr !important;
+	}
+	/* Stats rows */
+	.stats-row {
+		flex-wrap: wrap;
+	}
+	.stat {
+		flex: 1 1 100%;
+		border-right: none !important;
+		border-bottom: 1px solid var(--rule);
+	}
+	.stat:last-child {
+		border-bottom: none;
+	}
+	/* Window showcase */
+	.ws-showcase {
+		grid-template-columns: 1fr !important;
+		gap: 24px !important;
+	}
 }
 
 /* 3D Window Explorer */
@@ -2395,7 +2473,7 @@ body.quote-modal-open {
 .cdet-ico svg {
 	width: 18px;
 	height: 18px;
-	stroke: var(--ink);
+	stroke: #000000;
 	fill: none;
 	stroke-width: 1.8;
 }
@@ -2770,7 +2848,7 @@ footer {
 .sc-arrow svg {
 	width: 16px;
 	height: 16px;
-	stroke: var(--ink);
+	stroke: #000000;
 	fill: none;
 	stroke-width: 2.2;
 }
@@ -6482,7 +6560,7 @@ body.nav-open {
 		gap: 16px;
 	}
 	.perks-grid {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(2, 1fr);
 	}
 
 	/* Gallery */
@@ -8289,7 +8367,7 @@ body.nav-open {
 	}
 
 	.homepage .perks-grid {
-		grid-template-columns: 1fr !important;
+		grid-template-columns: repeat(2, 1fr) !important;
 		gap: 8px !important;
 		margin-top: 16px !important;
 		max-width: 100% !important;
@@ -8299,8 +8377,8 @@ body.nav-open {
 	.homepage .perk {
 		padding: 14px 16px !important;
 		display: flex !important;
-		flex-direction: row !important;
-		align-items: center !important;
+		flex-direction: column !important;
+		align-items: flex-start !important;
 		gap: 14px !important;
 		border-radius: 10px !important;
 		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
@@ -8319,6 +8397,11 @@ body.nav-open {
 	.homepage .perk-ico svg {
 		width: 17px !important;
 		height: 17px !important;
+		stroke: #000000 !important;
+		fill: none !important;
+		stroke-width: 2.4 !important;
+		stroke-linecap: round !important;
+		stroke-linejoin: round !important;
 	}
 	.homepage .perk h3 {
 		font-size: 0.88rem !important;
@@ -8698,6 +8781,11 @@ body.nav-open {
 	.homepage .perk-ico svg {
 		width: 14px !important;
 		height: 14px !important;
+		stroke: #000000 !important;
+		fill: none !important;
+		stroke-width: 2.2 !important;
+		stroke-linecap: round !important;
+		stroke-linejoin: round !important;
 	}
 
 	/* Product cards â€” tighter */
