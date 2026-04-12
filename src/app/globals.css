@@ -2395,15 +2395,15 @@ body.nav-open{overflow:hidden}
     grid-template-columns:1fr!important;gap:20px!important
   }
 
-  /* Section / wrapper padding floors — kill huge desktop padding */
+  /* Section / wrapper padding floors — give sections breathing space on mobile */
   [style*="padding:clamp(80px"],
   [style*="padding:clamp(72px"],
   [style*="padding:clamp(64px"],
   [style*="padding:clamp(48px"],
   [style*="padding:clamp(120px"],
   [style*="padding:clamp(140px"]{
-    padding-top:32px!important;padding-bottom:32px!important;
-    padding-left:14px!important;padding-right:14px!important
+    padding-top:52px!important;padding-bottom:52px!important;
+    padding-left:20px!important;padding-right:20px!important
   }
   /* Inner content wrappers with fixed horizontal padding */
   [style*="padding:0 24px"],
@@ -2582,6 +2582,92 @@ body.nav-open{overflow:hidden}
   }
   .hm-strip-n{font-size:1.3rem!important}
   .perk h3{font-size:1rem}
+}
+
+/* ─────────────────────────────────────────
+   HOMEPAGE SECTION BREATHING SPACE
+   Adds consistent vertical rhythm between
+   sections across breakpoints.
+───────────────────────────────────────── */
+.homepage > section,
+.homepage > div.hm-ticker,
+.homepage > div.hm-stats-strip,
+.homepage > section.hm-stats,
+.homepage > section.hm-testimonials,
+.homepage > section.hm-cta-band{
+  position:relative;
+}
+
+/* Desktop: light gap between stacked sections */
+@media(min-width:901px){
+  .homepage > section + section,
+  .homepage > div + section,
+  .homepage > section + div{
+    margin-top:0; /* sections self-contain padding */
+  }
+  /* Velara advantage and product line get extra top margin */
+  .win-advantage,
+  .hm-prodline-grid{
+    margin-top:8px;
+  }
+}
+
+/* Tablet: bump section self-padding */
+@media(max-width:900px){
+  .homepage .hm-stats-strip{
+    padding:36px 24px!important;
+  }
+  .homepage .hm-stats{
+    padding:56px 24px!important;
+  }
+  .homepage .hm-testimonials{
+    padding:56px 0!important;
+  }
+  .homepage .hm-cta-band{
+    padding:56px 24px!important;
+  }
+  .homepage .win-advantage{
+    padding:56px 24px!important;
+  }
+}
+
+/* Mobile: generous vertical spacing */
+@media(max-width:640px){
+  .homepage .hm-stats-strip{
+    padding:40px 20px!important;
+    margin:0!important;
+  }
+  .homepage .hm-ticker{
+    padding:14px 0!important;
+  }
+  .homepage .hm-panel{
+    margin-bottom:0!important;
+  }
+  .homepage .hm-stats{
+    padding:56px 20px!important;
+  }
+  .homepage .hm-testimonials{
+    padding:56px 0 48px!important;
+  }
+  .homepage .hm-cta-band{
+    padding:56px 20px!important;
+  }
+  /* Velara Advantage */
+  .homepage .win-advantage{
+    padding:56px 20px!important;
+  }
+  /* Product line section */
+  .homepage section[style*="padding:clamp(48px,5vw,80px) 0"]{
+    padding-top:56px!important;padding-bottom:56px!important;
+  }
+  /* Section heading wrappers */
+  .homepage [style*="padding:0 24px"]{
+    padding-left:20px!important;padding-right:20px!important;
+  }
+  /* CTA band form */
+  .homepage .hm-cta-form{
+    padding:0 20px!important;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -3318,4 +3404,95 @@ body.nav-open{overflow:hidden}
   .homepage .hm-test-quote{font-size:.64rem!important}
   .homepage .hm-cta-h{font-size:clamp(1.1rem,4.5vw,1.7rem)!important}
   .homepage .hm-cta-band{padding:16px 10px!important}
+}
+
+/* ─── TABLET & IPAD (≤ 1024px) OVERRIDES ─── */
+@media (max-width: 1024px) {
+  .hm-prodline-windows {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    padding: 0 24px !important;
+  }
+  .hm-prodline-windows .rv-card-img {
+    height: 400px !important;
+  }
+  .hm-prodline-windows .rv-card-body {
+    padding: 32px !important;
+  }
+
+  /* Doors and Garage to 2 columns on iPad */
+  .hm-prodline-doors, .hm-prodline-garage {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 24px !important;
+    padding: 0 24px !important;
+  }
+  .hm-prodline-doors .rv-card-img,
+  .hm-prodline-garage .rv-card-img {
+    height: 280px !important;
+  }
+  .hm-prodline-doors img,
+  .hm-prodline-garage img {
+    max-height: 250px !important;
+  }
+  .hm-prodline-doors .door-mat-card,
+  .hm-prodline-garage .rv-card-body {
+    padding: 24px !important;
+  }
+  .hm-prodline-doors .hm-card-title,
+  .hm-prodline-windows .hm-card-title {
+    font-size: 1.5rem !important;
+  }
+  .hm-prodline-doors .hm-card-desc,
+  .hm-prodline-garage .hm-card-desc,
+  .hm-prodline-windows .hm-card-desc {
+    font-size: 0.95rem !important;
+  }
+}
+
+/* ─── SMALL TABLETS (≤ 800px) ─── */
+@media (max-width: 800px) {
+  /* Doors and Garage to 1 column */
+  .hm-prodline-doors, .hm-prodline-garage {
+    grid-template-columns: 1fr !important;
+  }
+  .hm-prodline-windows .rv-card-img {
+    height: 300px !important;
+  }
+  .hm-prodline-doors .rv-card-img,
+  .hm-prodline-garage .rv-card-img {
+    height: 300px !important;
+  }
+  .hm-prodline-windows .hm-card-specs,
+  .hm-prodline-doors .hm-card-specs,
+  .hm-prodline-garage .hm-card-specs {
+    gap: 20px !important;
+    margin-top: 16px !important;
+  }
+  .hm-prodline-windows .hm-spec-val,
+  .hm-prodline-doors .hm-spec-val,
+  .hm-prodline-garage .hm-spec-val {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* ─── MOBILE PHONES (≤ 600px) ─── */
+@media (max-width: 600px) {
+  .hm-prodline-windows .rv-card-img,
+  .hm-prodline-doors .rv-card-img,
+  .hm-prodline-garage .rv-card-img {
+    height: 220px !important;
+    padding: 16px !important;
+  }
+  .hm-prodline-windows img,
+  .hm-prodline-doors img,
+  .hm-prodline-garage img {
+    height: auto !important;
+    max-height: 180px !important;
+    transform: scale(1) !important;
+  }
+  .hm-prodline-windows .rv-card-body,
+  .hm-prodline-doors .door-mat-card,
+  .hm-prodline-garage .rv-card-body {
+    padding: 16px 20px 20px !important;
+  }
 }
