@@ -1066,7 +1066,7 @@ footer{
 /* Inline stats strip */
 .hm-stats-strip{
   display:flex;justify-content:center;align-items:center;gap:clamp(24px,4vw,48px);
-  padding:clamp(28px,3.5vw,48px) 24px;background:var(--white);
+  padding:clamp(48px, 6vw, 80px) 24px clamp(28px, 3.5vw, 48px) 24px;background:var(--white);
   max-width:900px;margin:0 auto;
 }
 .hm-strip-item{text-align:center;flex:1}
