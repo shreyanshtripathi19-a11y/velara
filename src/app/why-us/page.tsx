@@ -334,7 +334,7 @@ export default function WhyUsPage() {
       </section>
 
       {/* ── Dark CTA ── */}
-      <div style={{ marginTop: "-1px" }}>
+      <div style={{ marginTop: "-1px", marginBottom: "calc(-1 * clamp(64px, 8vw, 112px))" }}>
       <DarkCTA
         heading="Ready to see the"
         headingEm="difference?"

@@ -418,7 +418,11 @@ function CtaBandForm() {
     <section className="hm-cta-band">
       <h2 className="hm-cta-h">Free estimate.<br /><em>No commitment.</em></h2>
       {submitted ? (
-        <p style={{ fontSize: "1.1rem", color: "#fff", fontWeight: 600, marginTop: 16 }}>✓ Thank you! We&apos;ll be in touch shortly.</p>
+        <div style={{ textAlign: "center", padding: "24px 0" }}>
+          <div style={{ fontSize: "2.5rem", marginBottom: 12 }}>✓</div>
+          <p style={{ fontSize: "1.3rem", color: "#fff", fontWeight: 700, margin: "0 0 8px" }}>Thank you!</p>
+          <p style={{ fontSize: ".95rem", color: "rgba(255,255,255,.7)", fontWeight: 400, margin: 0 }}>Someone from our team will get in touch within 1 business hour.</p>
+        </div>
       ) : (
         <div className="hm-cta-form">
           <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Name" required />
