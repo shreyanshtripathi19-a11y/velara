@@ -420,7 +420,7 @@ function CtaBandForm() {
       {submitted ? (
         <div style={{ textAlign: "center", padding: "24px 0" }}>
           <p style={{ fontSize: "1.2rem", color: "var(--accent)", fontWeight: 600, margin: 0 }}>✓ Thank you!</p>
-          <p style={{ fontSize: ".88rem", color: "rgba(255,255,255,.55)", fontWeight: 400, marginTop: 8 }}>We&apos;ll be in touch within the next few minutes.</p>
+          <p style={{ fontSize: ".88rem", color: "rgba(0,0,0,.55)", fontWeight: 400, marginTop: 8 }}>We&apos;ll be in touch within the next few minutes.</p>
         </div>
       ) : (
         <div className="hm-cta-form">

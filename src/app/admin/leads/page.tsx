@@ -44,53 +44,47 @@ export default function LeadsPage() {
 
   const unread = contacts.filter((c) => !c.isRead).length;
 
-  if (loading) return <AdminShell><p style={{ color: "rgba(255,255,255,.5)" }}>Loading…</p></AdminShell>;
+  if (loading) return <AdminShell><p style={{ color: "rgba(0,0,0,.4)" }}>Loading…</p></AdminShell>;
 
   return (
     <AdminShell unread={unread}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-        <p style={{ color: "rgba(255,255,255,.4)", fontSize: ".85rem" }}>{contacts.length} total leads · {unread} unread</p>
-        <button onClick={exportCSV} style={{ background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.1)", color: "#fff", padding: "8px 16px", borderRadius: 8, fontSize: ".8rem", cursor: "pointer", fontWeight: 500 }}>
-          Export CSV ↓
-        </button>
+        <p style={{ color: "rgba(0,0,0,.45)", fontSize: ".85rem" }}>{contacts.length} total leads · {unread} unread</p>
+        <button onClick={exportCSV} className="admin-btn admin-btn-ghost">Export CSV ↓</button>
       </div>
 
-      <div style={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,.06)", borderRadius: 12, overflow: "hidden" }}>
+      <div className="admin-card">
         {contacts.map((c) => (
-          <div key={c.id} style={{ borderBottom: "1px solid rgba(255,255,255,.04)" }}>
+          <div key={c.id} className="admin-lead-row">
             <div
+              className="admin-lead-header"
               onClick={() => { setExpanded(expanded === c.id ? null : c.id); if (!c.isRead) markRead(c.id, true); }}
-              style={{ padding: "16px 20px", cursor: "pointer", display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}
             >
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: c.isRead ? "transparent" : "#6c3ce0", flexShrink: 0 }} />
-              <span style={{ color: "#fff", fontWeight: c.isRead ? 400 : 600, fontSize: ".9rem", minWidth: 160 }}>{c.firstName} {c.lastName}</span>
-              <span style={{ color: "rgba(255,255,255,.4)", fontSize: ".84rem", flex: 1 }}>{c.email}</span>
-              <span style={{ background: "rgba(108,60,224,.15)", color: "#8b5cf6", padding: "3px 10px", borderRadius: 6, fontSize: ".75rem", fontWeight: 500 }}>{c.product}</span>
-              <span style={{ color: "rgba(255,255,255,.25)", fontSize: ".78rem", minWidth: 90 }}>{new Date(c.createdAt).toLocaleDateString()}</span>
+              <span className="admin-unread-dot" style={{ background: c.isRead ? "transparent" : "var(--accent)" }} />
+              <span style={{ color: "var(--ink)", fontWeight: c.isRead ? 400 : 600, fontSize: ".9rem", minWidth: 160 }}>{c.firstName} {c.lastName}</span>
+              <span style={{ color: "rgba(0,0,0,.4)", fontSize: ".84rem", flex: 1 }}>{c.email}</span>
+              <span className="admin-product-badge">{c.product}</span>
+              <span style={{ color: "rgba(0,0,0,.3)", fontSize: ".78rem", minWidth: 90 }}>{new Date(c.createdAt).toLocaleDateString()}</span>
             </div>
             {expanded === c.id && (
-              <div style={{ padding: "0 20px 20px 44px", display: "flex", flexDirection: "column", gap: 12 }}>
+              <div className="admin-lead-detail">
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                  <div><span style={{ color: "rgba(255,255,255,.3)", fontSize: ".75rem" }}>Phone</span><p style={{ margin: 0, color: "#fff", fontSize: ".9rem" }}><a href={`tel:${c.phone}`} style={{ color: "#8b5cf6", textDecoration: "none" }}>{c.phone}</a></p></div>
-                  <div><span style={{ color: "rgba(255,255,255,.3)", fontSize: ".75rem" }}>Email</span><p style={{ margin: 0, color: "#fff", fontSize: ".9rem" }}><a href={`mailto:${c.email}`} style={{ color: "#8b5cf6", textDecoration: "none" }}>{c.email}</a></p></div>
+                  <div><span className="admin-label" style={{ marginBottom: 2 }}>Phone</span><p style={{ margin: 0, fontSize: ".9rem" }}><a href={`tel:${c.phone}`} style={{ color: "var(--accent)", textDecoration: "none" }}>{c.phone}</a></p></div>
+                  <div><span className="admin-label" style={{ marginBottom: 2 }}>Email</span><p style={{ margin: 0, fontSize: ".9rem" }}><a href={`mailto:${c.email}`} style={{ color: "var(--accent)", textDecoration: "none" }}>{c.email}</a></p></div>
                 </div>
                 {c.message && (
-                  <div><span style={{ color: "rgba(255,255,255,.3)", fontSize: ".75rem" }}>Message</span><p style={{ margin: "4px 0 0", color: "rgba(255,255,255,.7)", fontSize: ".88rem", lineHeight: 1.6 }}>{c.message}</p></div>
+                  <div><span className="admin-label" style={{ marginBottom: 2 }}>Message</span><p style={{ margin: "4px 0 0", color: "rgba(0,0,0,.6)", fontSize: ".88rem", lineHeight: 1.6 }}>{c.message}</p></div>
                 )}
                 <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-                  <button onClick={() => markRead(c.id, !c.isRead)} style={{ background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.1)", color: "rgba(255,255,255,.6)", padding: "6px 14px", borderRadius: 6, fontSize: ".78rem", cursor: "pointer" }}>
-                    {c.isRead ? "Mark Unread" : "Mark Read"}
-                  </button>
-                  <button onClick={() => deleteLead(c.id)} style={{ background: "rgba(239,68,68,.1)", border: "1px solid rgba(239,68,68,.2)", color: "#ef4444", padding: "6px 14px", borderRadius: 6, fontSize: ".78rem", cursor: "pointer" }}>
-                    Delete
-                  </button>
+                  <button onClick={() => markRead(c.id, !c.isRead)} className="admin-btn admin-btn-ghost">{c.isRead ? "Mark Unread" : "Mark Read"}</button>
+                  <button onClick={() => deleteLead(c.id)} className="admin-btn admin-btn-danger">Delete</button>
                 </div>
               </div>
             )}
           </div>
         ))}
         {contacts.length === 0 && (
-          <p style={{ padding: 40, textAlign: "center", color: "rgba(255,255,255,.3)" }}>No leads yet. They will appear here when someone submits the contact form.</p>
+          <p style={{ padding: 40, textAlign: "center", color: "rgba(0,0,0,.3)" }}>No leads yet. They will appear here when someone submits the contact form.</p>
         )}
       </div>
     </AdminShell>

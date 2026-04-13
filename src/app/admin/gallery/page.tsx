@@ -55,53 +55,57 @@ export default function GalleryAdminPage() {
     setImages((prev) => prev.filter((i) => i.id !== id));
   };
 
-  if (loading) return <AdminShell><p style={{ color: "rgba(255,255,255,.5)" }}>Loading…</p></AdminShell>;
+  if (loading) return <AdminShell><p style={{ color: "rgba(0,0,0,.4)" }}>Loading…</p></AdminShell>;
 
   return (
     <AdminShell>
       {/* Upload section */}
-      <div style={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,.06)", borderRadius: 12, padding: 24, marginBottom: 24 }}>
-        <h3 style={{ color: "#fff", fontSize: ".95rem", fontWeight: 600, margin: "0 0 16px" }}>Upload New Image</h3>
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "end" }}>
-          <div style={{ flex: "1 1 200px" }}>
-            <label style={{ color: "rgba(255,255,255,.4)", fontSize: ".75rem", display: "block", marginBottom: 4 }}>File</label>
-            <input ref={fileRef} type="file" accept="image/*" style={{ width: "100%", padding: "8px", background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.1)", borderRadius: 8, color: "#fff", fontSize: ".85rem" }} />
+      <div className="admin-card" style={{ marginBottom: 24 }}>
+        <div className="admin-card-header">
+          <h3>Upload New Image</h3>
+        </div>
+        <div className="admin-card-body">
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "end" }}>
+            <div style={{ flex: "1 1 200px" }}>
+              <label className="admin-label">File</label>
+              <input ref={fileRef} type="file" accept="image/*" className="admin-input" style={{ padding: 8 }} />
+            </div>
+            <div style={{ flex: "1 1 200px" }}>
+              <label className="admin-label">Alt Text / Description</label>
+              <input type="text" value={alt} onChange={(e) => setAlt(e.target.value)} placeholder="Window install — Toronto" className="admin-input" />
+            </div>
+            <div style={{ flex: "0 0 150px" }}>
+              <label className="admin-label">Category</label>
+              <select value={category} onChange={(e) => setCategory(e.target.value)} className="admin-input">
+                <option value="windows">Windows</option>
+                <option value="doors">Doors</option>
+                <option value="garage">Garage</option>
+              </select>
+            </div>
+            <button onClick={upload} disabled={uploading} className="admin-btn admin-btn-primary" style={{ whiteSpace: "nowrap", opacity: uploading ? 0.6 : 1 }}>
+              {uploading ? "Uploading…" : "Upload →"}
+            </button>
           </div>
-          <div style={{ flex: "1 1 200px" }}>
-            <label style={{ color: "rgba(255,255,255,.4)", fontSize: ".75rem", display: "block", marginBottom: 4 }}>Alt Text / Description</label>
-            <input type="text" value={alt} onChange={(e) => setAlt(e.target.value)} placeholder="Window install — Toronto" style={{ width: "100%", padding: "10px 14px", background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.1)", borderRadius: 8, color: "#fff", fontSize: ".85rem", boxSizing: "border-box" }} />
-          </div>
-          <div style={{ flex: "0 0 150px" }}>
-            <label style={{ color: "rgba(255,255,255,.4)", fontSize: ".75rem", display: "block", marginBottom: 4 }}>Category</label>
-            <select value={category} onChange={(e) => setCategory(e.target.value)} style={{ width: "100%", padding: "10px 14px", background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.1)", borderRadius: 8, color: "#fff", fontSize: ".85rem" }}>
-              <option value="windows">Windows</option>
-              <option value="doors">Doors</option>
-              <option value="garage">Garage</option>
-            </select>
-          </div>
-          <button onClick={upload} disabled={uploading} style={{ padding: "10px 24px", background: "linear-gradient(135deg, #6c3ce0, #8b5cf6)", color: "#fff", border: "none", borderRadius: 8, fontSize: ".85rem", fontWeight: 600, cursor: "pointer", opacity: uploading ? 0.6 : 1, whiteSpace: "nowrap" }}>
-            {uploading ? "Uploading…" : "Upload →"}
-          </button>
         </div>
       </div>
 
       {/* Image grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
         {images.map((img) => (
-          <div key={img.id} style={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,.06)", borderRadius: 12, overflow: "hidden", position: "relative" }}>
+          <div key={img.id} className="admin-card" style={{ overflow: "hidden" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={img.src} alt={img.alt} style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }} loading="lazy" />
-            <div style={{ padding: "12px" }}>
-              <p style={{ color: "#fff", fontSize: ".8rem", margin: "0 0 4px", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{img.alt || "Untitled"}</p>
+            <div style={{ padding: 14 }}>
+              <p style={{ color: "var(--ink)", fontSize: ".82rem", margin: "0 0 8px", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{img.alt || "Untitled"}</p>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ background: "rgba(108,60,224,.15)", color: "#8b5cf6", padding: "2px 8px", borderRadius: 4, fontSize: ".7rem", fontWeight: 500 }}>{img.category}</span>
-                <button onClick={() => deleteImage(img.id)} style={{ background: "none", border: "none", color: "rgba(239,68,68,.7)", fontSize: ".78rem", cursor: "pointer", padding: "4px 8px" }}>Delete</button>
+                <span className="admin-product-badge">{img.category}</span>
+                <button onClick={() => deleteImage(img.id)} className="admin-btn admin-btn-danger" style={{ padding: "4px 12px", fontSize: ".75rem" }}>Delete</button>
               </div>
             </div>
           </div>
         ))}
       </div>
-      {images.length === 0 && <p style={{ textAlign: "center", color: "rgba(255,255,255,.3)", padding: 40 }}>No images yet. Upload one above.</p>}
+      {images.length === 0 && <p style={{ textAlign: "center", color: "rgba(0,0,0,.3)", padding: 40 }}>No images yet. Upload one above.</p>}
     </AdminShell>
   );
 }
