@@ -6,6 +6,34 @@ import { PageHero } from "@/components/Sections";
 export default function ContactPage() {
   useScrollReveal();
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [form, setForm] = useState({
+    firstName: "", lastName: "", phone: "", email: "", product: "", message: ""
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("Failed to send");
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please call us at 416-500-7610 instead.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -27,16 +55,16 @@ export default function ContactPage() {
           {submitted ? (
             <p style={{ fontSize: "1.05rem", color: "var(--accent)", fontWeight: 600, marginTop: 32 }}>Thank you! We&apos;ll be in touch within the next few minutes.</p>
           ) : (
-            <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}>
+            <form onSubmit={handleSubmit}>
               <div className="frow">
-                <div className="ff"><label>First Name</label><input type="text" placeholder="John" required /></div>
-                <div className="ff"><label>Last Name</label><input type="text" placeholder="Smith" required /></div>
+                <div className="ff"><label>First Name</label><input type="text" name="firstName" value={form.firstName} onChange={handleChange} placeholder="John" required /></div>
+                <div className="ff"><label>Last Name</label><input type="text" name="lastName" value={form.lastName} onChange={handleChange} placeholder="Smith" required /></div>
               </div>
-              <div className="ff"><label>Phone Number</label><input type="tel" placeholder="(416) 555-0123" required /></div>
-              <div className="ff"><label>Email Address</label><input type="email" placeholder="john@example.com" required /></div>
+              <div className="ff"><label>Phone Number</label><input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="(416) 555-0123" required /></div>
+              <div className="ff"><label>Email Address</label><input type="email" name="email" value={form.email} onChange={handleChange} placeholder="john@example.com" required /></div>
               <div className="ff">
                 <label>Product Interest</label>
-                <select defaultValue="" required>
+                <select name="product" value={form.product} onChange={handleChange} required>
                   <option value="" disabled>Select a product…</option>
                   <option>Windows</option>
                   <option>Entry Doors</option>
@@ -45,8 +73,9 @@ export default function ContactPage() {
                   <option>Multiple Products</option>
                 </select>
               </div>
-              <div className="ff"><label>Message (optional)</label><textarea placeholder="Tell us about your project…" /></div>
-              <button className="fsub" type="submit">Send My Request →</button>
+              <div className="ff"><label>Message (optional)</label><textarea name="message" value={form.message} onChange={handleChange} placeholder="Tell us about your project…" /></div>
+              {error && <p style={{ color: "#e53e3e", fontSize: ".9rem", marginBottom: 12 }}>{error}</p>}
+              <button className="fsub" type="submit" disabled={loading}>{loading ? "Sending…" : "Send My Request →"}</button>
             </form>
           )}
         </div>
