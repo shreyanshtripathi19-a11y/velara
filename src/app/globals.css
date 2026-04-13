@@ -27,9 +27,12 @@
   --p100: rgba(0, 0, 0, .06);
   --p050: var(--white);
 
+  /* Notification bar offset */
+  --notif-h: 0px;
+
   /* Glass tokens */
-  --glass-bg: rgba(255, 255, 255, .72);
-  --glass-bg-heavy: rgba(255, 255, 255, .88);
+  --glass-bg: rgba(255, 255, 255, .88);
+  --glass-bg-heavy: rgba(255, 255, 255, .94);
   --glass-border: rgba(255, 255, 255, .4);
   --glass-border-dark: rgba(0, 0, 0, .08);
   --glass-blur: 24px;
@@ -60,6 +63,7 @@
   border: 1px solid var(--glass-border-dark);
   border-radius: var(--radius-md);
   box-shadow: var(--glass-shadow);
+  will-change: transform;
 }
 
 .glass:hover {
@@ -537,12 +541,13 @@ video {
 ───────────────────────────────────────── */
 #nav {
   position: fixed;
-  top: 0;
+  top: var(--notif-h, 0px);
   left: 0;
   right: 0;
   z-index: 900;
   padding: 12px 24px 0;
   pointer-events: none;
+  transition: top .3s ease;
 }
 
 .nav-inner {
@@ -551,10 +556,11 @@ video {
   height: 44px;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, .96);
+  background: rgba(255, 255, 255, .97);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   border: 1px solid rgba(0, 0, 0, .06);
+  will-change: transform;
   border-radius: var(--radius-pill);
   padding: 0 8px 0 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, .06), 0 4px 16px rgba(0, 0, 0, .04);
@@ -1965,10 +1971,11 @@ div.hm-stats-strip[style*="border"]::after {
 }
 
 .quote-modal {
-  background: rgba(255, 255, 255, .55);
+  background: rgba(255, 255, 255, .88);
   backdrop-filter: blur(40px) saturate(200%);
   -webkit-backdrop-filter: blur(40px) saturate(200%);
   border: 1px solid rgba(255, 255, 255, .8);
+  will-change: transform;
   border-radius: var(--radius-lg);
   max-width: 520px;
   width: 100%;
