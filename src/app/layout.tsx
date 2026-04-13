@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   title: "Velara Windows & Doors | Premium Canadian Manufacturer",
   description:
     "Factory-direct premium windows, doors, and garage doors. Proudly Canadian. 25-year warranty. 4–8 day turnaround.",
+  icons: {
+    icon: "/favicon.png",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
@@ -35,6 +39,7 @@ export default function RootLayout({
       <head>
         <meta name="color-scheme" content="light" />
         <meta name="theme-color" content="#FFFFFF" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
       </head>
       <body className={inter.variable}>
         <QuoteModalProvider>

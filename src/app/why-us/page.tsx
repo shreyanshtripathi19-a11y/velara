@@ -334,6 +334,7 @@ export default function WhyUsPage() {
       </section>
 
       {/* ── Dark CTA ── */}
+      <div style={{ marginTop: "-1px" }}>
       <DarkCTA
         heading="Ready to see the"
         headingEm="difference?"
@@ -343,6 +344,7 @@ export default function WhyUsPage() {
         ghostText="Explore Products →"
         ghostHref="/"
       />
+      </div>
     </div>
   );
 }

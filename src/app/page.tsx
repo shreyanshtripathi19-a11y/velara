@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useCountUp } from "@/hooks/useCountUp";
@@ -373,16 +373,67 @@ export default function HomePage() {
       </section>
 
       {/* CTA BAND */}
-      <section className="hm-cta-band">
-        <h2 className="hm-cta-h">Free estimate.<br /><em>No commitment.</em></h2>
-        <div className="hm-cta-form">
-          <input type="text" placeholder="Name" />
-          <input type="tel" placeholder="Phone" />
-          <select defaultValue=""><option value="" disabled>Product</option><option>Windows</option><option>Doors</option><option>Garage Doors</option></select>
-          <button type="button">Get Estimate →</button>
-        </div>
-      </section>
+      <CtaBandForm />
     </div>
+  );
+}
+function CtaBandForm() {
+  const [form, setForm] = useState({ name: "", phone: "", product: "" });
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    if (!form.name || !form.phone || !form.product) return;
+    setLoading(true);
+    setError("");
+    const parts = form.name.trim().split(/\s+/);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: parts[0] || form.name,
+          lastName: parts.slice(1).join(" ") || "-",
+          phone: form.phone,
+          email: "quick-estimate@velara.ca",
+          product: form.product,
+          message: "Quick estimate from homepage CTA",
+        }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Call us at 416-500-7610.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <section className="hm-cta-band">
+      <h2 className="hm-cta-h">Free estimate.<br /><em>No commitment.</em></h2>
+      {submitted ? (
+        <p style={{ fontSize: "1.1rem", color: "#fff", fontWeight: 600, marginTop: 16 }}>✓ Thank you! We&apos;ll be in touch shortly.</p>
+      ) : (
+        <div className="hm-cta-form">
+          <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Name" required />
+          <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="Phone" required />
+          <select name="product" value={form.product} onChange={handleChange} required>
+            <option value="" disabled>Product</option>
+            <option>Windows</option>
+            <option>Doors</option>
+            <option>Garage Doors</option>
+          </select>
+          <button type="button" onClick={handleSubmit} disabled={loading}>{loading ? "Sending…" : "Get Estimate →"}</button>
+          {error && <p style={{ color: "#fca5a5", fontSize: ".85rem", margin: 0, gridColumn: "1 / -1" }}>{error}</p>}
+        </div>
+      )}
+    </section>
   );
 }
 
