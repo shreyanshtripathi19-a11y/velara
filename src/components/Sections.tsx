@@ -70,9 +70,10 @@ interface DarkCTAProps {
   primaryHref?: string;
   ghostText?: string;
   ghostHref?: string;
+  category?: string;
 }
 
-export function DarkCTA({ heading, headingEm, sub, primaryText, primaryHref, ghostText, ghostHref }: DarkCTAProps = {}) {
+export function DarkCTA({ heading, headingEm, sub, primaryText, primaryHref, ghostText, ghostHref, category }: DarkCTAProps = {}) {
   const { open } = useQuoteModal();
   return (
     <section
@@ -114,7 +115,7 @@ export function DarkCTA({ heading, headingEm, sub, primaryText, primaryHref, gho
         {primaryHref ? (
           <Link href={primaryHref} className="hm-cta-primary" style={{ fontSize: "1.1rem", padding: "16px 40px" }}>{primaryText || "Get a Free Estimate →"}</Link>
         ) : (
-          <button className="hm-cta-primary" style={{ fontSize: "1.1rem", padding: "16px 40px" }} onClick={() => open()}>{primaryText || "Get Free Estimate"}</button>
+          <button className="hm-cta-primary" style={{ fontSize: "1.1rem", padding: "16px 40px" }} onClick={() => open("", category || "")}>{primaryText || "Get Free Estimate"}</button>
         )}
         {ghostText && ghostHref && (
           <Link href={ghostHref} className="hm-cta-ghost" style={{ fontSize: "1.1rem", padding: "16px 40px", color: "#FFFFFF", borderColor: "rgba(255,255,255,.2)" }}>{ghostText}</Link>
