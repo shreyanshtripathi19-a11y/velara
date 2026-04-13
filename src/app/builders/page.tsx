@@ -7,6 +7,39 @@ export default function BuildersPage() {
   useScrollReveal();
   useVideoObserver();
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [form, setForm] = useState({ company: "", contact: "", phone: "", scale: "" });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: form.contact.split(/\s+/)[0] || form.contact,
+          lastName: form.contact.split(/\s+/).slice(1).join(" ") || "-",
+          phone: form.phone,
+          email: "builder-lead@velara.ca",
+          product: `Builders — ${form.scale}`,
+          message: `Company: ${form.company}\nProject Scale: ${form.scale}`,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please call us at 416-500-7610.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="builders-page">
@@ -165,11 +198,11 @@ export default function BuildersPage() {
         {submitted ? (
           <p style={{ fontSize: "1.1rem", color: "var(--accent)", fontWeight: 600, marginTop: 32 }}>Thank you! A rep will be in touch shortly.</p>
         ) : (
-          <form className="est-form" onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}>
-            <input type="text" placeholder="Company Name" required />
-            <input type="text" placeholder="Contact Name" required />
-            <input type="tel" placeholder="Phone Number" required />
-            <select defaultValue="" required>
+          <form className="est-form" onSubmit={handleSubmit}>
+            <input type="text" name="company" value={form.company} onChange={handleChange} placeholder="Company Name" required />
+            <input type="text" name="contact" value={form.contact} onChange={handleChange} placeholder="Contact Name" required />
+            <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="Phone Number" required />
+            <select name="scale" value={form.scale} onChange={handleChange} required>
               <option value="" disabled>Project Scale</option>
               <option>Custom Home (1-5 units)</option>
               <option>Townhome Complex (6-50 units)</option>
@@ -179,7 +212,8 @@ export default function BuildersPage() {
               <option>Subdivision / Multi-Phase</option>
               <option>Renovation Contractor</option>
             </select>
-            <button className="est-btn" type="submit">Get Trade Pricing →</button>
+            {error && <p style={{ color: "#e53e3e", fontSize: ".85rem", margin: 0 }}>{error}</p>}
+            <button className="est-btn" type="submit" disabled={loading}>{loading ? "Sending…" : "Get Trade Pricing →"}</button>
           </form>
         )}
         <p className="est-note">No commitment required — just a conversation about what we can do for your next build</p>

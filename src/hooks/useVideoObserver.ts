@@ -38,7 +38,7 @@ export function useVideoObserver() {
 
         if (heroVid.paused) {
           heroVid.play().catch(() => {
-            setTimeout(() => heroVid.play().catch(() => {}), 300);
+            setTimeout(() => heroVid.play().catch(() => { }), 300);
           });
         }
       }
@@ -60,7 +60,7 @@ export function useVideoObserver() {
                 vid.muted = true;
                 vid.playsInline = true;
                 vid.play().catch(() => {
-                  setTimeout(() => vid.play().catch(() => {}), 300);
+                  setTimeout(() => vid.play().catch(() => { }), 300);
                 });
                 observer?.unobserve(vid);
               }
@@ -94,7 +94,7 @@ export function useVideoObserver() {
               vid.muted = true;
               vid.playsInline = true;
               vid.play().catch(() => {
-                setTimeout(() => vid.play().catch(() => {}), 300);
+                setTimeout(() => vid.play().catch(() => { }), 300);
               });
               observer?.unobserve(vid);
             }
@@ -120,7 +120,7 @@ export function useVideoObserver() {
           vid.setAttribute("playsinline", "");
           vid.setAttribute("muted", "");
           vid.setAttribute("autoplay", "");
-          if (vid.paused) vid.play().catch(() => {});
+          if (vid.paused) vid.play().catch(() => { });
         });
       };
 
