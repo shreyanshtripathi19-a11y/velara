@@ -1,12 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import MobileDrawer from "@/components/MobileDrawer";
-import QuoteModal from "@/components/QuoteModal";
-import ScrollToTop from "@/components/ScrollToTop";
-import NotificationBar from "@/components/NotificationBar";
+import SiteShell from "@/components/SiteShell";
 import { DrawerProvider } from "@/context/DrawerContext";
 import { QuoteModalProvider } from "@/context/QuoteModalContext";
 
@@ -44,13 +39,7 @@ export default function RootLayout({
       <body className={inter.variable}>
         <QuoteModalProvider>
           <DrawerProvider>
-            <ScrollToTop />
-            <NotificationBar />
-            <Navbar />
-            <MobileDrawer />
-            <main>{children}</main>
-            <Footer />
-            <QuoteModal />
+            <SiteShell>{children}</SiteShell>
           </DrawerProvider>
         </QuoteModalProvider>
       </body>
