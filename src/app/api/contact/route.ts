@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { getDb } from "@/lib/db";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -20,6 +21,16 @@ export async function POST(req: NextRequest) {
         { error: "Missing required fields" },
         { status: 400 }
       );
+    }
+
+    // Save to database first (so we never lose a lead)
+    try {
+      const db = getDb();
+      db.prepare(
+        "INSERT INTO contacts (firstName, lastName, phone, email, product, message) VALUES (?, ?, ?, ?, ?, ?)"
+      ).run(firstName, lastName, phone, email, product, message || "");
+    } catch (dbErr) {
+      console.error("DB save error:", dbErr);
     }
 
     const htmlContent = `

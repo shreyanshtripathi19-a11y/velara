@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import MobileDrawer from "@/components/MobileDrawer";
 import QuoteModal from "@/components/QuoteModal";
 import ScrollToTop from "@/components/ScrollToTop";
+import NotificationBar from "@/components/NotificationBar";
 import { DrawerProvider } from "@/context/DrawerContext";
 import { QuoteModalProvider } from "@/context/QuoteModalContext";
 
@@ -39,6 +40,7 @@ export default function RootLayout({
         <QuoteModalProvider>
           <DrawerProvider>
             <ScrollToTop />
+            <NotificationBar />
             <Navbar />
             <MobileDrawer />
             <main>{children}</main>

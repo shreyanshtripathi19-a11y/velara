@@ -1,23 +1,21 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-const galImages = [
-  { src: "/assets/reviews/project-1.jpg", cat: "windows", alt: "Window installation — Oakville", size: "xl" },
-  { src: "/assets/doors/entry-door.jpg", cat: "doors", alt: "Entry door — Vaughan", size: "lg" },
-  { src: "/assets/reviews/project-2.jpg", cat: "windows", alt: "Casement windows — Mississauga", size: "lg" },
-  { src: "/assets/doors/patio-door.jpg", cat: "doors", alt: "Patio door — Burlington", size: "xl" },
-  { src: "/assets/reviews/project-3.jpg", cat: "garage", alt: "Garage door — Richmond Hill", size: "xl" },
-  { src: "/assets/reviews/project-4.jpg", cat: "windows", alt: "Bay window — Markham", size: "lg" },
-  { src: "/assets/doors/double-door.jpg", cat: "doors", alt: "Double entry — Toronto", size: "lg" },
-  { src: "/assets/reviews/project-5.jpg", cat: "windows", alt: "Picture windows — Brampton", size: "xl" },
-  { src: "/assets/reviews/project-6.jpg", cat: "garage", alt: "Modern garage — Newmarket", size: "xl" },
-  { src: "/assets/doors/sidelights.jpg", cat: "doors", alt: "Sidelights — Etobicoke", size: "lg" },
-  { src: "/assets/reviews/project-1.jpg", cat: "windows", alt: "Full home — Concord", size: "lg" },
-  { src: "/assets/reviews/project-4.jpg", cat: "garage", alt: "Townhouse project", size: "xl" },
-  { src: "/assets/reviews/project-2.jpg", cat: "doors", alt: "Victorian windows", size: "xl" },
-  { src: "/assets/reviews/project-6.jpg", cat: "windows", alt: "Garage install", size: "lg" },
+interface GalleryImage { id: number; src: string; alt: string; category: string }
+
+const fallbackImages = [
+  { id: 1, src: "/assets/reviews/project-1.jpg", alt: "Window installation — Oakville", category: "windows" },
+  { id: 2, src: "/assets/doors/entry-door.jpg", alt: "Entry door — Vaughan", category: "doors" },
+  { id: 3, src: "/assets/reviews/project-2.jpg", alt: "Casement windows — Mississauga", category: "windows" },
+  { id: 4, src: "/assets/doors/patio-door.jpg", alt: "Patio door — Burlington", category: "doors" },
+  { id: 5, src: "/assets/reviews/project-3.jpg", alt: "Garage door — Richmond Hill", category: "garage" },
+  { id: 6, src: "/assets/reviews/project-4.jpg", alt: "Bay window — Markham", category: "windows" },
+  { id: 7, src: "/assets/doors/double-door.jpg", alt: "Double entry — Toronto", category: "doors" },
+  { id: 8, src: "/assets/reviews/project-5.jpg", alt: "Picture windows — Brampton", category: "windows" },
+  { id: 9, src: "/assets/reviews/project-6.jpg", alt: "Modern garage — Newmarket", category: "garage" },
+  { id: 10, src: "/assets/doors/sidelights.jpg", alt: "Sidelights — Etobicoke", category: "doors" },
 ];
 
 const filters = ["all", "windows", "doors", "garage"] as const;
@@ -27,8 +25,16 @@ const sizes = ["xl", "lg", "lg", "xl", "xl", "lg", "lg", "xl", "xl", "lg", "lg",
 export default function GalleryPage() {
   useScrollReveal();
   const [activeCat, setActiveCat] = useState<string>("all");
+  const [galImages, setGalImages] = useState<GalleryImage[]>(fallbackImages);
 
-  const filtered = activeCat === "all" ? galImages : galImages.filter(i => i.cat === activeCat);
+  useEffect(() => {
+    fetch("/api/admin/images")
+      .then((r) => r.json())
+      .then((d) => { if (d.images?.length > 0) setGalImages(d.images); })
+      .catch(() => {});
+  }, []);
+
+  const filtered = activeCat === "all" ? galImages : galImages.filter(i => i.category === activeCat);
 
   /* Build 7 columns × 2 cards, duplicated for seamless loop */
   const columns: { src: string; alt: string; size: string }[][] = [];
