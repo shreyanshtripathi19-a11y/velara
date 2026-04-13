@@ -31,8 +31,8 @@
   --notif-h: 0px;
 
   /* Glass tokens */
-  --glass-bg: rgba(255, 255, 255, .88);
-  --glass-bg-heavy: rgba(255, 255, 255, .94);
+  --glass-bg: rgba(255, 255, 255, .92);
+  --glass-bg-heavy: rgba(255, 255, 255, .96);
   --glass-border: rgba(255, 255, 255, .4);
   --glass-border-dark: rgba(0, 0, 0, .08);
   --glass-blur: 24px;
@@ -72,9 +72,9 @@
 }
 
 .glass-dark {
-  background: var(--glass-dark-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(0, 0, 0, .6);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--glass-dark-border);
   border-radius: var(--radius-lg);
 }
@@ -1971,7 +1971,7 @@ div.hm-stats-strip[style*="border"]::after {
 }
 
 .quote-modal {
-  background: rgba(255, 255, 255, .88);
+  background: rgba(255, 255, 255, .92);
   backdrop-filter: blur(40px) saturate(200%);
   -webkit-backdrop-filter: blur(40px) saturate(200%);
   border: 1px solid rgba(255, 255, 255, .8);

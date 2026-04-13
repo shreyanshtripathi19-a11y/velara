@@ -13,6 +13,22 @@ import { usePathname } from "next/navigation";
  * All other pages:
  *   - Videos autoplay with loop, force-retry as fallback.
  */
+
+function forcePlay(vid: HTMLVideoElement) {
+  vid.muted = true;
+  vid.playsInline = true;
+  vid.setAttribute("muted", "");
+  vid.setAttribute("playsinline", "");
+  if (vid.paused) {
+    const p = vid.play();
+    if (p) p.catch(() => {
+      // iOS sometimes needs the video to be loaded first
+      vid.load();
+      setTimeout(() => vid.play().catch(() => {}), 200);
+    });
+  }
+}
+
 export function useVideoObserver() {
   const pathname = usePathname();
 
@@ -36,16 +52,13 @@ export function useVideoObserver() {
         heroVid.addEventListener("playing", onPlaying);
         heroCleanup = () => heroVid.removeEventListener("playing", onPlaying);
 
-        if (heroVid.paused) {
-          heroVid.play().catch(() => {
-            setTimeout(() => heroVid.play().catch(() => { }), 300);
-          });
-        }
+        // Force play hero — very aggressive for iOS
+        forcePlay(heroVid);
+        setTimeout(() => forcePlay(heroVid), 300);
+        setTimeout(() => forcePlay(heroVid), 800);
       }
 
       // Panel videos: scroll-triggered, play once
-      // Wait for first user scroll before enabling the observer
-      // so videos visible on initial paint don't autoplay
       let hasScrolled = false;
       let observer: IntersectionObserver | null = null;
       const panelVideos = new Set<HTMLVideoElement>();
@@ -57,11 +70,7 @@ export function useVideoObserver() {
               const vid = entry.target as HTMLVideoElement;
               if (entry.isIntersecting && hasScrolled) {
                 vid.currentTime = 0;
-                vid.muted = true;
-                vid.playsInline = true;
-                vid.play().catch(() => {
-                  setTimeout(() => vid.play().catch(() => { }), 300);
-                });
+                forcePlay(vid);
                 observer?.unobserve(vid);
               }
             });
@@ -86,16 +95,11 @@ export function useVideoObserver() {
       const onScroll = () => {
         if (!hasScrolled) {
           hasScrolled = true;
-          // Re-check all observed videos now that scroll is confirmed
           panelVideos.forEach((vid) => {
             const rect = vid.getBoundingClientRect();
             if (rect.top < window.innerHeight * 0.75 && rect.bottom > 0) {
               vid.currentTime = 0;
-              vid.muted = true;
-              vid.playsInline = true;
-              vid.play().catch(() => {
-                setTimeout(() => vid.play().catch(() => { }), 300);
-              });
+              forcePlay(vid);
               observer?.unobserve(vid);
             }
           });
@@ -113,26 +117,39 @@ export function useVideoObserver() {
       };
     } else {
       // ── OTHER PAGES: simple force-autoplay with loop ──
-      const forceAutoplay = () => {
-        document.querySelectorAll("video").forEach((vid) => {
-          vid.muted = true;
-          vid.playsInline = true;
-          vid.setAttribute("playsinline", "");
-          vid.setAttribute("muted", "");
+      const doAutoplay = () => {
+        document.querySelectorAll<HTMLVideoElement>("video").forEach((vid) => {
           vid.setAttribute("autoplay", "");
-          if (vid.paused) vid.play().catch(() => { });
+          forcePlay(vid);
         });
       };
 
-      forceAutoplay();
-      const t1 = setTimeout(forceAutoplay, 300);
-      const t2 = setTimeout(forceAutoplay, 1000);
-      const t3 = setTimeout(forceAutoplay, 2500);
+      // Aggressive retry — iOS Safari can be very slow
+      doAutoplay();
+      const t1 = setTimeout(doAutoplay, 200);
+      const t2 = setTimeout(doAutoplay, 600);
+      const t3 = setTimeout(doAutoplay, 1500);
+      const t4 = setTimeout(doAutoplay, 3000);
+      const t5 = setTimeout(doAutoplay, 5000);
+
+      // Also listen for loadeddata events
+      const handler = (e: Event) => {
+        const vid = e.target as HTMLVideoElement;
+        if (vid.paused) forcePlay(vid);
+      };
+      document.querySelectorAll<HTMLVideoElement>("video").forEach((vid) => {
+        vid.addEventListener("loadeddata", handler);
+      });
 
       return () => {
         clearTimeout(t1);
         clearTimeout(t2);
         clearTimeout(t3);
+        clearTimeout(t4);
+        clearTimeout(t5);
+        document.querySelectorAll<HTMLVideoElement>("video").forEach((vid) => {
+          vid.removeEventListener("loadeddata", handler);
+        });
       };
     }
   }, [pathname]);
