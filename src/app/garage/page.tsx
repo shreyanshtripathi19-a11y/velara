@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useVideoObserver } from "@/hooks/useVideoObserver";
 import { useQuoteModal } from "@/context/QuoteModalContext";
 
 const garageMaterials = [
@@ -27,6 +28,7 @@ const galleryImages = [
 
 export default function GaragePage() {
   useScrollReveal();
+  useVideoObserver();
   const { open: openQuote } = useQuoteModal();
   const benefitsRef = useRef<HTMLDivElement>(null);
 
@@ -62,7 +64,8 @@ export default function GaragePage() {
           </p>
         </div>
         <div className="rv-hero-vid-garage" style={{ position: "relative", marginTop: 24, background: "var(--white)", overflow: "hidden" }}>
-          <video autoPlay muted playsInline loop style={{ display: "block", width: "88%", height: "65vh", objectFit: "contain", background: "var(--white)", margin: "0 auto" }}>
+          <video autoPlay muted playsInline loop preload="auto" style={{ display: "block", width: "88%", height: "65vh", objectFit: "contain", background: "var(--white)", margin: "0 auto" }}>
+            <source src="/assets/garage-page-hero.webm" type="video/webm" />
             <source src="/assets/garage-page-hero.mp4" type="video/mp4" />
           </video>
           {/* Blend gradients — top, bottom, left, right */}
@@ -120,7 +123,8 @@ export default function GaragePage() {
               </div>
             </div>
             <div className="garage-vid" style={{ borderRadius: "var(--radius-lg)", aspectRatio: "3/4", overflow: "hidden" }}>
-              <video autoPlay muted playsInline loop style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}>
+              <video autoPlay muted playsInline loop preload="auto" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}>
+                <source src="/assets/garage/panel-styles.webm" type="video/webm" />
                 <source src="/assets/garage/panel-styles.mp4" type="video/mp4" />
               </video>
             </div>
@@ -195,7 +199,8 @@ export default function GaragePage() {
               </div>
             </div>
             <div className="garage-vid" style={{ borderRadius: "var(--radius-lg)", aspectRatio: "7/3", overflow: "hidden" }}>
-              <video autoPlay muted playsInline loop style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}>
+              <video autoPlay muted playsInline loop preload="auto" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}>
+                <source src="/assets/garage/colours.webm" type="video/webm" />
                 <source src="/assets/garage/colours.mp4" type="video/mp4" />
               </video>
             </div>

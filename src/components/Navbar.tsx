@@ -39,6 +39,7 @@ export default function Navbar() {
             </div>
           </li>
           <li className={isAct("/builders")}><Link href="/builders">Builders</Link></li>
+          <li className={isAct("/emergency")}><Link href="/emergency">24/7 Emergency</Link></li>
           <li className={isAct("/why-us")}><Link href="/why-us">Why Us</Link></li>
           <li className={isAct("/gallery")}><Link href="/gallery">Gallery</Link></li>
           <li className={isAct("/contact")}><Link href="/contact">Contact</Link></li>

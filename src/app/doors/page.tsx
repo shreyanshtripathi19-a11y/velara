@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRef, useCallback, useEffect } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useVideoObserver } from "@/hooks/useVideoObserver";
 import { useQuoteModal } from "@/context/QuoteModalContext";
 
 const materials = [
@@ -11,10 +12,10 @@ const materials = [
 ];
 
 const collection = [
-  { label: "Classic", title: "Single Door", sub: "Premium single entry in steel, fibreglass, or wood. The foundation of your home's first impression.", img: "/assets/doors/entry-door.jpg" },
-  { label: "Grand", title: "Double Doors", sub: "Wider entryways deserve grandeur. With or without sidelights and transoms.", img: "/assets/doors/double-door.jpg" },
-  { label: "Seamless", title: "Patio Doors", sub: "Sliding or hinged with floor-to-ceiling glass. Bring the outdoors in.", img: "/assets/doors/patio-door.jpg" },
-  { label: "Elegant", title: "With Sidelights", sub: "Glass panels flanking your entry flood the foyer with light and elegance.", img: "/assets/doors/sidelights.jpg" },
+  { label: "Classic", title: "Single Door", sub: "Premium single entry in steel, fibreglass, or wood. The foundation of your home's first impression.", img: "/assets/doors/entry-door.png" },
+  { label: "Grand", title: "Double Doors", sub: "Wider entryways deserve grandeur. With or without sidelights and transoms.", img: "/assets/doors/double-door.png" },
+  { label: "Seamless", title: "Patio Doors", sub: "Sliding or hinged with floor-to-ceiling glass. Bring the outdoors in.", img: "/assets/doors/patio-door.png" },
+  { label: "Elegant", title: "With Sidelights", sub: "Glass panels flanking your entry flood the foyer with light and elegance.", img: "/assets/doors/sidelights.png" },
   { label: "Bespoke", title: "Custom Glass", sub: "One-of-a-kind glass inserts with custom ironwork — your vision, executed.", img: "/assets/doors/Custom Glass 2.png" },
 ];
 
@@ -25,6 +26,7 @@ const galleryImages = [
 
 export default function DoorsPage() {
   useScrollReveal();
+  useVideoObserver();
   const { open: openQuote } = useQuoteModal();
   const trackRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef(0);
@@ -113,8 +115,9 @@ export default function DoorsPage() {
             Steel, fibreglass, or wood — every Velara door is custom built in Ontario to your exact specifications.
           </p>
         </div>
-        <div className="rv-hero-vid" style={{ position: "relative", marginTop: 16, background: "var(--white)", overflow: "hidden" }}>
-          <video autoPlay muted playsInline loop style={{ display: "block", width: "100%", height: "85vh", objectFit: "contain", background: "var(--white)", transform: "translateX(-3%)" }}>
+        <div className="rv-hero-vid" style={{ position: "relative", marginTop: 16, overflow: "hidden" }}>
+          <video autoPlay muted playsInline loop preload="auto" className="doors-hero-video" style={{ display: "block", width: "100%", objectFit: "contain" }}>
+            <source src="/assets/doors-hero.webm" type="video/webm" />
             <source src="/assets/doors-hero.mp4" type="video/mp4" />
           </video>
           {/* Blend gradients — top, bottom, left, right */}
@@ -129,8 +132,7 @@ export default function DoorsPage() {
         </div>
       </section>
 
-      {/* ── Materials ── */}
-      <section style={{ padding: "clamp(48px,6vw,80px) 24px", background: "var(--white)", borderTop: "1px solid var(--rule)" }}>
+      <section style={{ padding: "clamp(48px,6vw,80px) 24px", background: "var(--white)" }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <p className="ch-label sr">Choose Your Material</p>
           <h2 className="ch-h sr d1" style={{ color: "var(--ink)" }}>Three materials. <em style={{ color: "var(--accent)" }}>One standard.</em></h2>
@@ -177,7 +179,10 @@ export default function DoorsPage() {
               </div>
             </div>
             <div className="rv-glass-vid" style={{ aspectRatio: "4/5", overflow: "hidden", borderRadius: "var(--radius-lg)" }}>
-              <video src="/assets/videos/custom-glass.mp4" autoPlay muted loop playsInline style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(1.1)" }} />
+              <video autoPlay muted loop playsInline preload="auto" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(1.12)" }}>
+                <source src="/assets/videos/custom-glass.webm" type="video/webm" />
+                <source src="/assets/videos/custom-glass.mp4" type="video/mp4" />
+              </video>
             </div>
           </div>
         </div>

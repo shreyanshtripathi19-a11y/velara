@@ -28,7 +28,8 @@ export default function BuildersPage() {
         <p className="hm-panel-label" style={{ position: "static", opacity: 1, transform: "none", color: "rgba(0,0,0,.4)", fontSize: ".75rem", letterSpacing: ".12em", textTransform: "uppercase", marginBottom: 12 }}>Trade Program</p>
         <h2 className="hm-panel-h" style={{ position: "static", opacity: 1, transform: "none", color: "var(--accent)", marginBottom: 0 }}>From blueprint<br /><em style={{ color: "var(--accent)" }}>to build.</em></h2>
         <div className="hm-panel hm-panel-blend" style={{ marginTop: 24, background: "var(--white)" }}>
-          <video className="hm-panel-bg hm-scroll-video" muted playsInline style={{ background: "var(--white)" }}>
+          <video className="hm-panel-bg hm-scroll-video" muted playsInline preload="auto" style={{ background: "var(--white)" }}>
+            <source src="/assets/builders-hero3.webm" type="video/webm" />
             <source src="/assets/builders-hero3.mp4" type="video/mp4" />
           </video>
           <div className="hm-panel-edge-l" /><div className="hm-panel-edge-r" />
@@ -102,7 +103,8 @@ export default function BuildersPage() {
 
       {/* ── Street-level builders video ── */}
       <section className="hm-panel hm-panel-blend builders-street-video" style={{ background: "var(--white)", height: "auto", minHeight: "auto", position: "relative" }}>
-        <video className="hm-scroll-video" muted playsInline style={{ width: "100%", display: "block", objectFit: "contain", background: "var(--white)", filter: "brightness(1.06)" }}>
+        <video className="hm-scroll-video" muted playsInline preload="auto" style={{ width: "100%", display: "block", objectFit: "contain", background: "#FFFFFF" }}>
+          <source src="/assets/builders-street.webm" type="video/webm" />
           <source src="/assets/builders-street.mp4" type="video/mp4" />
         </video>
         <div className="hm-panel-edge-l" /><div className="hm-panel-edge-r" />

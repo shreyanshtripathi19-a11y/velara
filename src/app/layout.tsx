@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -10,6 +10,13 @@ import { DrawerProvider } from "@/context/DrawerContext";
 import { QuoteModalProvider } from "@/context/QuoteModalContext";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: "Velara Windows & Doors | Premium Canadian Manufacturer",
@@ -25,10 +32,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script
-          type="module"
-          src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"
-        />
+        <meta name="color-scheme" content="light" />
+        <meta name="theme-color" content="#FFFFFF" />
       </head>
       <body className={inter.variable}>
         <QuoteModalProvider>

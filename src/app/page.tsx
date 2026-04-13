@@ -12,7 +12,7 @@ export default function HomePage() {
   useVideoObserver();
   usePanelAnimations();
 
-  /* Testimonials mouse-tracking parallax */
+  /* Testimonials mouse-tracking + touch-drag parallax */
   const driftRef = useRef<HTMLDivElement>(null);
   const vpRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -30,6 +30,17 @@ export default function HomePage() {
     };
     const onLeave = () => { mx = 0.5; my = 0.5; };
 
+    /* Touch support for mobile */
+    const onTouch = (e: TouchEvent) => {
+      if (!e.touches.length) return;
+      const t = e.touches[0];
+      const r = vp.getBoundingClientRect();
+      mx = (t.clientX - r.left) / r.width;
+      my = (t.clientY - r.top) / r.height;
+      e.preventDefault(); // prevent page scroll while swiping cards
+    };
+    const onTouchEnd = () => { mx = 0.5; my = 0.5; };
+
     const tick = () => {
       cx += (mx - cx) * 0.06;
       cy += (my - cy) * 0.06;
@@ -42,10 +53,14 @@ export default function HomePage() {
 
     vp.addEventListener("mousemove", onMove);
     vp.addEventListener("mouseleave", onLeave);
+    vp.addEventListener("touchmove", onTouch, { passive: false });
+    vp.addEventListener("touchend", onTouchEnd);
     return () => {
       cancelAnimationFrame(raf);
       vp.removeEventListener("mousemove", onMove);
       vp.removeEventListener("mouseleave", onLeave);
+      vp.removeEventListener("touchmove", onTouch);
+      vp.removeEventListener("touchend", onTouchEnd);
     };
   }, []);
 
@@ -54,14 +69,15 @@ export default function HomePage() {
       {/* HERO */}
       <section className="hm-hero">
         <div className="hm-hero-text">
-          <div className="hm-hero-badge">Premium Windows &amp; Doors</div>
+          <div className="hm-hero-badge">Factory Direct</div>
           <h1 className="hm-title">
             <span className="hm-word" id="hw0">Windows</span>{" "}
             <span className="hm-amp" id="hw1">&amp;</span>{" "}
             <span className="hm-word hm-word-purple" id="hw2">Doors.</span>
           </h1>
         </div>
-        <video className="hm-hero-bg loaded" autoPlay muted playsInline>
+        <video className="hm-hero-bg loaded" autoPlay muted playsInline loop preload="auto">
+          <source src="/assets/hero-video.webm" type="video/webm"/>
           <source src="/assets/hero-video.mp4" type="video/mp4"/>
         </video>
         <div className="hm-hero-links" id="hm-links-bottom">
@@ -111,47 +127,53 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* WINDOWS PANEL — video left, text right */}
-      <section className="hm-panel hm-panel-txt-right" data-page="windows">
-        <div className="hm-panel-vid">
-          <video className="hm-scroll-video" muted playsInline>
-            <source src="/assets/windows-seasons.mp4" type="video/mp4"/>
-          </video>
-        </div>
-        <div className="hm-panel-txt">
+      {/* ③ WINDOWS — full-bleed video, text overlaid top-right, reveals on scroll */}
+      <Link href="/windows" style={{display:'block',textDecoration:'none',color:'inherit',cursor:'pointer'}}>
+      <section className="hm-panel hm-panel-blend" data-page="windows">
+        <div className="hm-panel-content hm-panel-content-dark hm-panel-content-right">
           <p className="hm-panel-label">01</p>
           <h2 className="hm-panel-h">Let the<br/><em>light in.</em></h2>
-          <Link href="/windows" className="hm-panel-link">Windows ›</Link>
         </div>
+        <video className="hm-panel-bg hm-scroll-video" muted playsInline preload="auto" style={{background:'var(--white)'}}>
+          <source src="/assets/windows-seasons.webm" type="video/webm"/>
+          <source src="/assets/windows-seasons.mp4" type="video/mp4"/>
+        </video>
+        <div className="hm-panel-edge-l"></div><div className="hm-panel-edge-r"></div>
+        <div className="hm-panel-link-wrap"><span className="hm-panel-link">Windows ›</span></div>
       </section>
+      </Link>
 
-      {/* DOORS PANEL — text left, video right */}
-      <section className="hm-panel hm-panel-txt-left" data-page="doors">
-        <div className="hm-panel-vid">
-          <video className="hm-scroll-video" muted playsInline>
-            <source src="/assets/doors-home.mp4" type="video/mp4"/>
-          </video>
-        </div>
-        <div className="hm-panel-txt">
+      {/* ④ DOORS — text top-left */}
+      <Link href="/doors" style={{display:'block',textDecoration:'none',color:'inherit',cursor:'pointer'}}>
+      <section className="hm-panel hm-panel-blend" data-page="doors">
+        <div className="hm-panel-content hm-panel-content-dark hm-panel-content-left" style={{top:'12px'}}>
           <p className="hm-panel-label">02</p>
           <h2 className="hm-panel-h">Make an<br/><em>entrance.</em></h2>
-          <Link href="/doors" className="hm-panel-link">Doors ›</Link>
         </div>
+        <video className="hm-panel-bg hm-scroll-video" muted playsInline preload="auto" style={{background:'var(--white)'}}>
+          <source src="/assets/doors-home.webm" type="video/webm"/>
+          <source src="/assets/doors-home.mp4" type="video/mp4"/>
+        </video>
+        <div className="hm-panel-edge-l"></div><div className="hm-panel-edge-r"></div>
+        <div className="hm-panel-link-wrap"><span className="hm-panel-link">Doors ›</span></div>
       </section>
+      </Link>
 
-      {/* GARAGE PANEL — video left, text right */}
-      <section className="hm-panel hm-panel-txt-right" data-page="garage">
-        <div className="hm-panel-vid">
-          <video className="hm-scroll-video" muted playsInline>
-            <source src="/assets/garage-hero.mp4" type="video/mp4"/>
-          </video>
-        </div>
-        <div className="hm-panel-txt">
+      {/* ⑤ GARAGE — text top-right */}
+      <Link href="/garage" style={{display:'block',textDecoration:'none',color:'inherit',cursor:'pointer'}}>
+      <section className="hm-panel hm-panel-blend" data-page="garage">
+        <div className="hm-panel-content hm-panel-content-dark hm-panel-content-right">
           <p className="hm-panel-label">03</p>
-          <h2 className="hm-panel-h" style={{whiteSpace:'nowrap'}}>Curb appeal,<br/><em>elevated.</em></h2>
-          <Link href="/garage" className="hm-panel-link">Garage Doors ›</Link>
+          <h2 className="hm-panel-h">Curb appeal,<br/><em>elevated.</em></h2>
         </div>
+        <video className="hm-panel-bg hm-scroll-video" muted playsInline preload="auto" style={{background:'var(--white)'}}>
+          <source src="/assets/garage-hero.webm" type="video/webm"/>
+          <source src="/assets/garage-hero.mp4" type="video/mp4"/>
+        </video>
+        <div className="hm-panel-edge-l"></div><div className="hm-panel-edge-r"></div>
+        <div className="hm-panel-link-wrap"><span className="hm-panel-link">Garage Doors ›</span></div>
       </section>
+      </Link>
 
       {/* VELARA ADVANTAGE */}
       <section className="sr win-advantage home-advantage" style={{padding:"clamp(48px,5vw,72px) 24px",background:"var(--white)"}}>
@@ -179,8 +201,9 @@ export default function HomePage() {
 
         {/* WINDOWS */}
         <p className="sr d1" style={{textTransform:"uppercase",letterSpacing:"2px",fontSize:"0.75rem",color:"var(--muted)",textAlign:"center",marginBottom:"24px",fontWeight:600}}>Windows</p>
-        <div className="sr d2 hm-prodline-grid hm-prodline-windows" style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:"32px",maxWidth:"1200px",margin:"0 auto 48px",padding:"0 24px"}}>
-          <div className="hm-prod-card" style={{borderRadius:"var(--radius-lg)",overflow:"hidden",background:"var(--white)",display:"flex",flexDirection:"column",border:"1px solid var(--rule)",boxShadow:"0 2px 12px rgba(0,0,0,.04)"}}>
+        <Link href="/windows" style={{display:'block',textDecoration:'none',color:'inherit'}}>
+        <div className="sr d2 hm-prodline-grid hm-prodline-windows" style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:"32px",maxWidth:"1200px",margin:"0 auto 48px",padding:"0 24px",cursor:"pointer"}}>
+          <div className="hm-prod-card" style={{borderRadius:"var(--radius-lg)",overflow:"hidden",background:"var(--white)",display:"flex",flexDirection:"column",boxShadow:"0 2px 12px rgba(0,0,0,.04)"}}>
             <div className="rv-card-img" style={{position:"relative",background:"var(--white)",padding:"32px",height:"290px",display:"flex",alignItems:"center",justifyContent:"center"}}>
               <div className="hm-card-tag" style={{position:"absolute",top:"16px",left:"16px",background:"#4a7c59",color:"white",fontSize:"0.75rem",fontWeight:700,padding:"6px 16px",borderRadius:"6px",letterSpacing:"0.5px"}}>V Series</div>
               <img src="/assets/v-series.png" alt="V Series window" style={{maxHeight:"255px",objectFit:"contain",mixBlendMode:"multiply"}}/>
@@ -193,7 +216,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <div className="hm-prod-card" style={{borderRadius:"var(--radius-lg)",overflow:"hidden",background:"var(--white)",display:"flex",flexDirection:"column",border:"1px solid var(--rule)",boxShadow:"0 2px 12px rgba(0,0,0,.04)"}}>
+          <div className="hm-prod-card" style={{borderRadius:"var(--radius-lg)",overflow:"hidden",background:"var(--white)",display:"flex",flexDirection:"column",boxShadow:"0 2px 12px rgba(0,0,0,.04)"}}>
             <div className="rv-card-img" style={{position:"relative",background:"var(--white)",padding:"32px",height:"290px",display:"flex",alignItems:"center",justifyContent:"center"}}>
               <div className="hm-card-tag" style={{position:"absolute",top:"16px",left:"16px",background:"#1a2744",color:"white",fontSize:"0.75rem",fontWeight:700,padding:"6px 16px",borderRadius:"6px",letterSpacing:"0.5px"}}>Signature Series</div>
               <img src="/assets/signature-series.png" alt="Signature Series window" style={{maxHeight:"255px",objectFit:"contain",mixBlendMode:"multiply"}}/>
@@ -207,13 +230,15 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+        </Link>
 
         {/* DOORS */}
-        <p className="sr" style={{textTransform:"uppercase",letterSpacing:"2px",fontSize:"0.75rem",color:"var(--muted)",textAlign:"center",marginBottom:"24px",fontWeight:600}}>Doors</p>
-        <div className="sr d1 hm-prodline-grid hm-prodline-doors" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"24px",maxWidth:"1100px",margin:"0 auto 48px",padding:"0 24px"}}>
+        <p className="sr" style={{textTransform:"uppercase",letterSpacing:"2px",fontSize:"0.75rem",color:"var(--muted)",textAlign:"center",marginBottom:"24px",fontWeight:600,marginTop:"clamp(32px,4vw,56px)"}}>Doors</p>
+        <Link href="/doors" style={{display:'block',textDecoration:'none',color:'inherit'}}>
+        <div className="sr d1 hm-prodline-grid hm-prodline-doors" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"24px",maxWidth:"1100px",margin:"0 auto 48px",padding:"0 24px",cursor:"pointer"}}>
           <div className="door-mat-card">
-            <div className="rv-card-img" style={{height:"306px",background:"var(--white)",borderRadius:"var(--radius-md)",marginBottom:"24px",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
-              <img src="/assets/doors/steel.png" alt="Steel entry door" style={{maxHeight:"272px",width:"auto",objectFit:"contain",display:"block",margin:"0 auto"}}/>
+            <div className="rv-card-img" style={{height:"306px",background:"transparent",marginBottom:"24px",display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <img src="/assets/doors/steel.png" alt="Steel entry door" style={{maxHeight:"272px",width:"auto",objectFit:"contain",display:"block",margin:"0 auto",mixBlendMode:"multiply"}}/>
             </div>
             <div className="hm-card-badge-row" style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"12px"}}>
               <span className="hm-card-badge" style={{fontSize:".68rem",padding:"4px 10px",borderRadius:"20px",background:"rgba(75,40,109,.1)",color:"var(--accent)",fontWeight:600,letterSpacing:".04em",textTransform:"uppercase"}}>Most Popular</span>
@@ -227,8 +252,8 @@ export default function HomePage() {
             </div>
           </div>
           <div className="door-mat-card">
-            <div className="rv-card-img" style={{height:"306px",background:"var(--white)",borderRadius:"var(--radius-md)",marginBottom:"24px",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
-              <img src="/assets/doors/fibreglass.png" alt="Fibreglass entry door" style={{maxHeight:"272px",width:"auto",objectFit:"contain",display:"block",margin:"0 auto"}}/>
+            <div className="rv-card-img" style={{height:"306px",background:"transparent",marginBottom:"24px",display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <img src="/assets/doors/fibreglass.png" alt="Fibreglass entry door" style={{maxHeight:"272px",width:"auto",objectFit:"contain",display:"block",margin:"0 auto",mixBlendMode:"multiply"}}/>
             </div>
             <div className="hm-card-badge-row" style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"12px"}}>
               <span className="hm-card-badge" style={{fontSize:".68rem",padding:"4px 10px",borderRadius:"20px",background:"rgba(0,0,0,.06)",color:"rgba(0,0,0,.5)",fontWeight:600,letterSpacing:".04em",textTransform:"uppercase"}}>Low Maintenance</span>
@@ -242,7 +267,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="door-mat-card">
-            <div className="rv-card-img" style={{height:"306px",background:"var(--white)",borderRadius:"var(--radius-md)",marginBottom:"24px",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+            <div className="rv-card-img" style={{height:"306px",background:"transparent",marginBottom:"24px",display:"flex",alignItems:"center",justifyContent:"center"}}>
               <img src="/assets/doors/wood.png" alt="Wood entry door" style={{maxHeight:"272px",width:"auto",objectFit:"contain",display:"block",margin:"0 auto"}}/>
             </div>
             <div className="hm-card-badge-row" style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"12px"}}>
@@ -257,15 +282,17 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+        </Link>
 
         {/* GARAGE DOORS */}
-        <p className="sr" style={{textTransform:"uppercase",letterSpacing:"2px",fontSize:"0.75rem",color:"var(--muted)",textAlign:"center",marginBottom:"24px",fontWeight:600}}>Garage Doors</p>
-        <div className="sr d1 hm-prodline-grid hm-prodline-garage" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"24px",maxWidth:"1200px",margin:"0 auto",padding:"0 24px"}}>
+        <p className="sr" style={{textTransform:"uppercase",letterSpacing:"2px",fontSize:"0.75rem",color:"var(--muted)",textAlign:"center",marginBottom:"24px",fontWeight:600,marginTop:"clamp(32px,4vw,56px)"}}>Garage Doors</p>
+        <Link href="/garage" style={{display:'block',textDecoration:'none',color:'inherit'}}>
+        <div className="sr d1 hm-prodline-grid hm-prodline-garage" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"24px",maxWidth:"1200px",margin:"0 auto",padding:"0 24px",cursor:"pointer"}}>
           {/* Steel */}
-          <div className="hm-prod-card" style={{borderRadius:"var(--radius-lg)",overflow:"hidden",background:"var(--white)",border:"1px solid var(--rule)",boxShadow:"0 2px 12px rgba(0,0,0,.04)",display:"flex",flexDirection:"column"}}>
-            <div className="rv-card-img" style={{position:"relative",background:"var(--white)",padding:"24px 24px 0",height:"238px",display:"flex",alignItems:"flex-end",justifyContent:"center",overflow:"hidden"}}>
+          <div className="hm-prod-card" style={{borderRadius:"var(--radius-lg)",overflow:"hidden",background:"var(--white)",boxShadow:"0 2px 12px rgba(0,0,0,.04)",display:"flex",flexDirection:"column"}}>
+            <div className="rv-card-img" style={{position:"relative",background:"transparent",padding:"24px 24px 0",height:"238px",display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
               <div className="hm-card-tag" style={{position:"absolute",top:"16px",left:"16px",background:"#1a2744",color:"white",fontSize:"0.7rem",fontWeight:700,padding:"5px 12px",borderRadius:"6px",letterSpacing:"0.5px",zIndex:2}}>Steel</div>
-              <img src="/assets/garage/steel.png" alt="Steel garage door" style={{maxHeight:"187px",maxWidth:"100%",objectFit:"contain"}}/>
+              <img src="/assets/garage/steel.png" alt="Steel garage door" style={{maxHeight:"187px",maxWidth:"100%",objectFit:"contain",mixBlendMode:"multiply"}}/>
             </div>
             <div className="rv-card-body" style={{padding:"24px 28px 28px",display:"flex",flexDirection:"column",flex:1}}>
               <p className="hm-card-desc" style={{color:"var(--ink)",fontSize:"0.95rem",lineHeight:1.7,flex:1}}>Maximum security and insulation. Polyurethane foam core with reinforced steel panels. R-18 rated, wind and snow tested.</p>
@@ -276,10 +303,10 @@ export default function HomePage() {
             </div>
           </div>
           {/* Natural Wood */}
-          <div className="hm-prod-card" style={{borderRadius:"var(--radius-lg)",overflow:"hidden",background:"var(--white)",border:"1px solid var(--rule)",boxShadow:"0 2px 12px rgba(0,0,0,.04)",display:"flex",flexDirection:"column"}}>
-            <div className="rv-card-img" style={{position:"relative",background:"var(--white)",padding:"24px 24px 0",height:"238px",display:"flex",alignItems:"flex-end",justifyContent:"center",overflow:"hidden"}}>
+          <div className="hm-prod-card" style={{borderRadius:"var(--radius-lg)",overflow:"hidden",background:"transparent",boxShadow:"0 2px 12px rgba(0,0,0,.04)",display:"flex",flexDirection:"column"}}>
+            <div className="rv-card-img" style={{position:"relative",background:"transparent",padding:"24px 24px 0",height:"238px",display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
               <div className="hm-card-tag" style={{position:"absolute",top:"16px",left:"16px",background:"#6b4226",color:"white",fontSize:"0.7rem",fontWeight:700,padding:"5px 12px",borderRadius:"6px",letterSpacing:"0.5px",zIndex:2}}>Natural Wood</div>
-              <img src="/assets/garage/wood.png" alt="Natural wood garage door" style={{maxHeight:"187px",maxWidth:"100%",objectFit:"contain"}}/>
+              <img src="/assets/garage/wood.png" alt="Natural wood garage door" style={{maxHeight:"187px",maxWidth:"100%",objectFit:"contain",mixBlendMode:"multiply"}}/>
             </div>
             <div className="rv-card-body" style={{padding:"24px 28px 28px",display:"flex",flexDirection:"column",flex:1}}>
               <p className="hm-card-desc" style={{color:"var(--ink)",fontSize:"0.95rem",lineHeight:1.7,flex:1}}>Rich, genuine wood grain with hand-crafted geometric detailing. Warm, timeless curb appeal with natural character.</p>
@@ -290,10 +317,10 @@ export default function HomePage() {
             </div>
           </div>
           {/* Aluminum & Glass */}
-          <div className="hm-prod-card" style={{borderRadius:"var(--radius-lg)",overflow:"hidden",background:"var(--white)",border:"1px solid var(--rule)",boxShadow:"0 2px 12px rgba(0,0,0,.04)",display:"flex",flexDirection:"column"}}>
-            <div className="rv-card-img" style={{position:"relative",background:"var(--white)",padding:"24px 24px 0",height:"238px",display:"flex",alignItems:"flex-end",justifyContent:"center",overflow:"hidden"}}>
+          <div className="hm-prod-card" style={{borderRadius:"var(--radius-lg)",overflow:"hidden",background:"transparent",boxShadow:"0 2px 12px rgba(0,0,0,.04)",display:"flex",flexDirection:"column"}}>
+            <div className="rv-card-img" style={{position:"relative",background:"transparent",padding:"24px 24px 0",height:"238px",display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
               <div className="hm-card-tag" style={{position:"absolute",top:"16px",left:"16px",background:"#4a7c59",color:"white",fontSize:"0.7rem",fontWeight:700,padding:"5px 12px",borderRadius:"6px",letterSpacing:"0.5px",zIndex:2}}>Aluminum &amp; Glass</div>
-              <img src="/assets/garage/aluminum.png" alt="Aluminum glass garage door" style={{maxHeight:"187px",maxWidth:"100%",objectFit:"contain"}}/>
+              <img src="/assets/garage/aluminum.png" alt="Aluminum glass garage door" style={{maxHeight:"187px",maxWidth:"100%",objectFit:"contain",mixBlendMode:"multiply"}}/>
             </div>
             <div className="rv-card-body" style={{padding:"24px 28px 28px",display:"flex",flexDirection:"column",flex:1}}>
               <p className="hm-card-desc" style={{color:"var(--ink)",fontSize:"0.95rem",lineHeight:1.7,flex:1}}>Full-view contemporary design. Anodized aluminum frames with tempered glass panels. Sleek, modern curb appeal.</p>
@@ -304,6 +331,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+        </Link>
       </section>
 
       {/* STATS */}
@@ -355,20 +383,6 @@ export default function HomePage() {
         </div>
       </section>
     </div>
-  );
-}
-
-/* Testimonial card helper */
-function TestCard({ type, size, children }: { type: string; size: string; children: React.ReactNode }) {
-  return <div className={`hm-test-card hm-test-card-${type} hm-test-card-${size}`}>{children}</div>;
-}
-function TestQuote({ initials, name, role, quote, type }: { initials: string; name: string; role: string; quote: string; type: string }) {
-  return (
-    <TestCard type={type} size="md">
-      <div className="hm-test-quote-mark">&ldquo;</div>
-      <p className="hm-test-quote">{quote}</p>
-      <div className="hm-test-author"><div className="hm-test-avatar">{initials}</div><div><p className="hm-test-name">{name}</p><p className="hm-test-role">{role}</p></div></div>
-    </TestCard>
   );
 }
 

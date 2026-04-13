@@ -144,6 +144,7 @@ export function PageHero({ label, title, sub, bgSrc, isVideo }: PageHeroProps) {
           muted
           loop
           playsInline
+          preload="auto"
         />
       ) : (
         <div className="ph-bg" style={{ backgroundImage: `url(${bgSrc})` }} />

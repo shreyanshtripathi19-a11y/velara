@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Script from "next/script";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useVideoObserver } from "@/hooks/useVideoObserver";
 import { useQuoteModal } from "@/context/QuoteModalContext";
 
 const ringColors = [
@@ -38,6 +40,7 @@ const galleryImages = [
 
 export default function WindowsPage() {
   useScrollReveal();
+  useVideoObserver();
   const { open: openQuote } = useQuoteModal();
   const dotsRef = useRef<HTMLDivElement>(null);
   const modelRef = useRef<HTMLElement | null>(null);
@@ -142,6 +145,11 @@ export default function WindowsPage() {
 
   return (
     <div>
+      <Script
+        src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"
+        type="module"
+        strategy="lazyOnload"
+      />
       {/* ── Hero ── */}
       <section className="hm-hero" style={{ minHeight: "auto", paddingBottom: 0 }}>
         <div className="hm-hero-text" style={{ padding: "20px 24px 0", marginBottom: 0 }}>
@@ -154,7 +162,8 @@ export default function WindowsPage() {
           </p>
         </div>
         <div className="rv-hero-vid" style={{ position: "relative", marginTop: 24, background: "var(--white)", overflow: "hidden" }}>
-          <video autoPlay muted playsInline loop style={{ display: "block", width: "100%", height: "75vh", objectFit: "contain", background: "var(--white)", transform: "scale(1.05)" }}>
+          <video autoPlay muted playsInline loop preload="auto" style={{ display: "block", width: "100%", height: "75vh", objectFit: "contain", background: "var(--white)", transform: "scale(1.05)" }}>
+            <source src="/assets/windows-weather.webm" type="video/webm" />
             <source src="/assets/windows-weather.mp4" type="video/mp4" />
           </video>
         </div>
@@ -165,7 +174,7 @@ export default function WindowsPage() {
       </section>
 
       {/* ── Stats Strip ── */}
-      <div className="hm-stats-strip sr" style={{ borderTop: "1px solid var(--rule)", borderBottom: "1px solid var(--rule)" }}>
+      <div className="hm-stats-strip sr">
         {[
           { n: <><span className="hm-count" data-target="1000000">1,000,000</span><sup>+</sup></>, l: "Windows Supplied" },
           { n: "Fastest", l: "Turnaround" },
@@ -180,7 +189,7 @@ export default function WindowsPage() {
       </div>
 
       {/* ── Series Grid ── */}
-      <section id="win-products" style={{ padding: "clamp(48px,6vw,80px) 24px", background: "var(--white)", overflow: "hidden" }}>
+      <section id="win-products" style={{ padding: "clamp(48px,6vw,80px) 24px", background: "var(--white)", overflow: "hidden", borderTop: "1px solid var(--rule)" }}>
         <div className="center" style={{ marginBottom: 48 }}>
           <p className="ch-label sr">Unbeatable Technology</p>
           <h2 className="ch-h sr" style={{ color: "var(--ink)" }}>Best windows on the <em style={{ color: "var(--accent)" }}>market.</em></h2>
@@ -205,7 +214,7 @@ export default function WindowsPage() {
       </section>
 
       {/* ── LoĒ Glass ── */}
-      <section style={{ padding: "clamp(48px,6vw,80px) 24px", background: "var(--white)", overflow: "hidden" }}>
+      <section style={{ padding: "clamp(48px,6vw,80px) 24px", background: "var(--white)", overflow: "hidden", borderTop: "1px solid var(--rule)" }}>
         <div className="center" style={{ marginBottom: 48 }}>
           <p className="ch-label sr">Glass Technology</p>
           <h2 className="ch-h sr" style={{ color: "var(--ink)" }}>Premium <em style={{ color: "var(--accent)" }}>LoĒ® glass.</em></h2>
@@ -239,7 +248,7 @@ export default function WindowsPage() {
       </section>
 
       {/* ── Colour Ring ── */}
-      <section style={{ padding: "clamp(48px,6vw,80px) 24px", background: "var(--white)", overflow: "hidden" }}>
+      <section style={{ padding: "clamp(48px,6vw,80px) 24px", background: "var(--white)", overflow: "hidden", borderTop: "1px solid var(--rule)" }}>
         <div className="center" style={{ marginBottom: 36 }}>
           <p className="ch-label sr">Customization</p>
           <h2 className="ch-h sr" style={{ color: "var(--ink)" }}>Endless colour <em style={{ color: "var(--accent)" }}>designs &amp; sizes.</em></h2>
@@ -279,7 +288,8 @@ export default function WindowsPage() {
         <p className="ch-label sr" style={{ color: "rgba(255,255,255,.4)" }}>Crafted With Precision</p>
         <h2 className="ch-h sr" style={{ color: "var(--white)" }}>See the <em style={{ color: "var(--accent)", fontStyle: "italic" }}>difference.</em></h2>
         <div style={{ position: "relative", marginTop: 24, maxWidth: 1200, marginLeft: "auto", marginRight: "auto", overflow: "hidden" }}>
-          <video autoPlay muted playsInline loop style={{ display: "block", width: "100%", height: "auto", maxHeight: "80vh", objectFit: "contain" }}>
+          <video autoPlay muted playsInline loop preload="auto" style={{ display: "block", width: "100%", height: "auto", maxHeight: "80vh", objectFit: "contain" }}>
+            <source src="/assets/window-showcase.webm" type="video/webm" />
             <source src="/assets/window-showcase.mp4" type="video/mp4" />
           </video>
           <div className="rv-blend-side" style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 100, zIndex: 1, pointerEvents: "none", background: "linear-gradient(to right,var(--ink) 0%,transparent 100%)" }} />
@@ -318,7 +328,7 @@ export default function WindowsPage() {
       </section>
 
       {/* ── Advantage ── */}
-      <section style={{ padding: "clamp(48px,5vw,72px) 24px", background: "var(--white)" }}>
+      <section style={{ padding: "clamp(48px,5vw,72px) 24px", background: "var(--white)", borderTop: "1px solid var(--rule)" }}>
         <div className="center" style={{ marginBottom: 0 }}>
           <p className="ch-label">The Velara Advantage</p>
           <h2 className="ch-h center" style={{ color: "var(--accent)" }}>Built for<br /><em style={{ color: "var(--accent)", fontStyle: "italic" }}>homeowners.</em></h2>
@@ -336,7 +346,7 @@ export default function WindowsPage() {
       </section>
 
       {/* ── Timeline ── */}
-      <section style={{ padding: "clamp(48px,5vw,72px) 24px", background: "var(--white)" }}>
+      <section style={{ padding: "clamp(48px,5vw,72px) 24px", background: "var(--white)", borderTop: "1px solid var(--rule)" }}>
         <div className="center" style={{ marginBottom: 36 }}>
           <p className="ch-label sr">Our Process</p>
           <h2 className="ch-h center sr" style={{ color: "var(--accent)" }}>Four steps to <em style={{ color: "var(--accent)", fontStyle: "italic" }}>perfection.</em></h2>
