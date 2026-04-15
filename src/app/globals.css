@@ -31,9 +31,9 @@
   --notif-h: 0px;
 
   /* Glass tokens — Apple-level glassmorphism */
-  --glass-bg: rgba(255, 255, 255, .72);
-  --glass-bg-heavy: rgba(255, 255, 255, .85);
-  --glass-border: rgba(255, 255, 255, .5);
+  --glass-bg: rgba(255, 255, 255, .88);
+  --glass-bg-heavy: rgba(255, 255, 255, .94);
+  --glass-border: rgba(255, 255, 255, .6);
   --glass-border-dark: rgba(0, 0, 0, .06);
   --glass-blur: 40px;
   --glass-saturate: saturate(200%) brightness(1.02);
@@ -41,7 +41,7 @@
   --glass-shadow-hover: 0 16px 48px rgba(0, 0, 0, .08), 0 0 24px rgba(75, 40, 109, .12);
   --glass-inner-glow: inset 0 1px 0 0 rgba(255, 255, 255, .6), inset 0 -1px 0 0 rgba(255, 255, 255, .1);
   --purple-glow: 0 0 0 1.5px rgba(75, 40, 109, .35), 0 0 24px rgba(75, 40, 109, .12);
-  --glass-dark-bg: rgba(0, 0, 0, .45);
+  --glass-dark-bg: rgba(0, 0, 0, .55);
   --glass-dark-border: rgba(255, 255, 255, .15);
 
   /* Spacing & radius */
@@ -562,10 +562,10 @@ video {
   height: 44px;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, .55);
+  background: rgba(255, 255, 255, .82);
   backdrop-filter: saturate(200%) blur(40px) brightness(1.05);
   -webkit-backdrop-filter: saturate(200%) blur(40px) brightness(1.05);
-  border: 1px solid rgba(255, 255, 255, .55);
+  border: 1px solid rgba(255, 255, 255, .6);
   will-change: transform;
   border-radius: var(--radius-pill);
   padding: 0 8px 0 24px;
@@ -575,7 +575,7 @@ video {
 }
 
 .nav-scrolled .nav-inner {
-  background: rgba(255, 255, 255, .78);
+  background: rgba(255, 255, 255, .92);
   border-color: rgba(0, 0, 0, .04);
   box-shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 8px 32px rgba(0, 0, 0, .06), inset 0 1px 0 0 rgba(255, 255, 255, .5);
 }
@@ -674,10 +674,10 @@ video {
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, .78);
+  background: rgba(255, 255, 255, .92);
   backdrop-filter: saturate(200%) blur(44px) brightness(1.05);
   -webkit-backdrop-filter: saturate(200%) blur(44px) brightness(1.05);
-  border: 1px solid rgba(255, 255, 255, .5);
+  border: 1px solid rgba(255, 255, 255, .6);
   border-radius: var(--radius-md);
   padding: 6px 0;
   min-width: 180px;
@@ -1614,7 +1614,7 @@ video {
 }
 
 .perk {
-  background: rgba(255, 255, 255, .65);
+  background: rgba(255, 255, 255, .88);
   backdrop-filter: saturate(180%) blur(30px) brightness(1.02);
   -webkit-backdrop-filter: saturate(180%) blur(30px) brightness(1.02);
   border: 1px solid rgba(255, 255, 255, .5);
@@ -1984,10 +1984,10 @@ div.hm-stats-strip[style*="border"]::after {
 }
 
 .quote-modal {
-  background: rgba(255, 255, 255, .68);
+  background: rgba(255, 255, 255, .92);
   backdrop-filter: blur(60px) saturate(210%) brightness(1.05);
   -webkit-backdrop-filter: blur(60px) saturate(210%) brightness(1.05);
-  border: 1px solid rgba(255, 255, 255, .65);
+  border: 1px solid rgba(255, 255, 255, .7);
   will-change: transform;
   border-radius: var(--radius-lg);
   max-width: 520px;
@@ -3472,10 +3472,10 @@ footer {
 
 .hm-hero-badge {
   display: inline-block;
-  background: rgba(255, 255, 255, .45);
+  background: rgba(255, 255, 255, .7);
   backdrop-filter: saturate(200%) blur(30px) brightness(1.05);
   -webkit-backdrop-filter: saturate(200%) blur(30px) brightness(1.05);
-  border: 1px solid rgba(255, 255, 255, .5);
+  border: 1px solid rgba(255, 255, 255, .6);
   border-radius: var(--radius-pill);
   padding: 6px 22px;
   font-size: .7rem;
@@ -4160,10 +4160,10 @@ video.hm-panel-bg {
   flex: 1 1 200px;
   padding: 40px 28px;
   text-align: center;
-  background: rgba(255, 255, 255, .65);
+  background: rgba(255, 255, 255, .88);
   backdrop-filter: saturate(200%) blur(40px) brightness(1.03);
   -webkit-backdrop-filter: saturate(200%) blur(40px) brightness(1.03);
-  border: 1px solid rgba(255, 255, 255, .5);
+  border: 1px solid rgba(255, 255, 255, .6);
   border-radius: var(--radius-md);
   box-shadow: 0 4px 24px rgba(0, 0, 0, .05), inset 0 1px 0 0 rgba(255, 255, 255, .6);
   transition: transform .4s var(--ease-out), box-shadow .4s, border-color .3s;
@@ -7079,7 +7079,7 @@ h3,
   right: 0;
   bottom: 0;
   z-index: 899;
-  background: rgba(255, 255, 255, .78);
+  background: rgba(255, 255, 255, .94);
   backdrop-filter: saturate(200%) blur(50px) brightness(1.05);
   -webkit-backdrop-filter: saturate(200%) blur(50px) brightness(1.05);
   transform: translateX(100%);

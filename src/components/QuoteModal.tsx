@@ -81,7 +81,7 @@ export default function QuoteModal() {
           {product ? `Get a Quote — ${product}` : "Request Your Free Estimate"}
         </h2>
         <p className="quote-modal-sub">
-          Fill in your details and we&apos;ll get back within 1 business hour.
+          Fill in your details and we&apos;ll get back within 1 hour.
         </p>
         {submitted ? (
           <div style={{ textAlign: "center", padding: "40px 0" }}>
