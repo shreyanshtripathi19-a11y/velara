@@ -1,11 +1,58 @@
 "use client";
-import Link from "next/link";
+import { useState, FormEvent } from "react";
 import { useVideoObserver } from "@/hooks/useVideoObserver";
 
 export default function EmergencyPage() {
   useVideoObserver();
+  const [showForm, setShowForm] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [form, setForm] = useState({
+    fullName: "", phone: "", email: "", address: "",
+    emergencyType: "", message: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    const parts = form.fullName.trim().split(/\s+/);
+    const firstName = parts[0] || "";
+    const lastName = parts.slice(1).join(" ") || "-";
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName, lastName,
+          phone: form.phone, email: form.email,
+          product: `🚨 EMERGENCY — ${form.emergencyType || "General"}`,
+          message: `📍 Address: ${form.address || "Not provided"}\n\n${form.message || ""}`.trim(),
+        }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setSubmitted(true);
+      setTimeout(() => { setSubmitted(false); setShowForm(false); }, 3000);
+    } catch {
+      setError("Something went wrong. Please call us at 416-500-7610.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const openForm = () => {
+    setSubmitted(false); setError("");
+    setForm({ fullName: "", phone: "", email: "", address: "", emergencyType: "", message: "" });
+    setShowForm(true);
+  };
 
   return (
+    <>
     <main className="homepage">
 
       {/* Hero */}
@@ -20,7 +67,7 @@ export default function EmergencyPage() {
         </p>
         <div style={{ marginTop: 32, display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
           <a className="hm-cta-primary" href="tel:4165007610" style={{ textDecoration: "none" }}>Call now — 416-500-7610 ›</a>
-          <Link href="/contact" className="hm-cta-ghost">Request a quote ›</Link>
+          <button className="hm-cta-ghost" onClick={openForm} style={{ border: "none", cursor: "pointer" }}>Get a free estimate ›</button>
         </div>
       </section>
 
@@ -54,48 +101,12 @@ export default function EmergencyPage() {
           </p>
         </div>
         <div className="perks-grid">
-          <div className="perk">
-            <div className="perk-ico">
-              <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
-            </div>
-            <h3>Residential Board-Ups</h3>
-            <p>Window and door board-ups for homes. We secure your property quickly so you can rest easy while permanent repairs are arranged.</p>
-          </div>
-          <div className="perk">
-            <div className="perk-ico">
-              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><polyline points="16 21 16 3 8 3 8 21" /></svg>
-            </div>
-            <h3>Storefront &amp; Commercial</h3>
-            <p>Storefront glass, entry doors, and commercial security closures. We minimize downtime and protect your business from further loss.</p>
-          </div>
-          <div className="perk">
-            <div className="perk-ico">
-              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
-            </div>
-            <h3>Break-In &amp; Vandalism</h3>
-            <p>Immediate response to break-ins and vandalism. We secure the breach, protect your property, and help you feel safe again.</p>
-          </div>
-          <div className="perk">
-            <div className="perk-ico">
-              <svg viewBox="0 0 24 24"><path d="M18 10h-4V6" /><path d="M14 10l7.64-7.64" /><path d="M21 3l-7 7" /><circle cx="12" cy="12" r="10" /></svg>
-            </div>
-            <h3>Storm &amp; Impact Damage</h3>
-            <p>High winds, hail, or falling debris — we respond immediately to storm damage with durable, weather-sealed board-up solutions.</p>
-          </div>
-          <div className="perk">
-            <div className="perk-ico">
-              <svg viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.07-2.14 0-5.5 3.5-7.5-2.5 5 .5 4 1.5 8-.34 1.45-1.63 2.5-3 2.5s-2.5-1.12-2.5-2.5z" /><path d="M12 22c-4.97 0-9-2.69-9-6v-1c3 1 5.5 0 9 0s6 1 9 0v1c0 3.31-4.03 6-9 6z" /></svg>
-            </div>
-            <h3>Fire &amp; Disaster Response</h3>
-            <p>After a fire or disaster, we board up damaged openings to prevent further damage, theft, and weather exposure while you rebuild.</p>
-          </div>
-          <div className="perk">
-            <div className="perk-ico">
-              <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" /><polygon points="23 7 16 12 16 7" /><line x1="1" y1="20" x2="23" y2="20" /></svg>
-            </div>
-            <h3>Construction &amp; Renovation</h3>
-            <p>Temporary window and door sealing for construction sites and renovations. Keep the elements out and your project on track.</p>
-          </div>
+          <div className="perk"><div className="perk-ico"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg></div><h3>Residential Board-Ups</h3><p>Window and door board-ups for homes. We secure your property quickly so you can rest easy while permanent repairs are arranged.</p></div>
+          <div className="perk"><div className="perk-ico"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><polyline points="16 21 16 3 8 3 8 21" /></svg></div><h3>Storefront &amp; Commercial</h3><p>Storefront glass, entry doors, and commercial security closures. We minimize downtime and protect your business from further loss.</p></div>
+          <div className="perk"><div className="perk-ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg></div><h3>Break-In &amp; Vandalism</h3><p>Immediate response to break-ins and vandalism. We secure the breach, protect your property, and help you feel safe again.</p></div>
+          <div className="perk"><div className="perk-ico"><svg viewBox="0 0 24 24"><path d="M18 10h-4V6" /><path d="M14 10l7.64-7.64" /><path d="M21 3l-7 7" /><circle cx="12" cy="12" r="10" /></svg></div><h3>Storm &amp; Impact Damage</h3><p>High winds, hail, or falling debris — we respond immediately to storm damage with durable, weather-sealed board-up solutions.</p></div>
+          <div className="perk"><div className="perk-ico"><svg viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.07-2.14 0-5.5 3.5-7.5-2.5 5 .5 4 1.5 8-.34 1.45-1.63 2.5-3 2.5s-2.5-1.12-2.5-2.5z" /><path d="M12 22c-4.97 0-9-2.69-9-6v-1c3 1 5.5 0 9 0s6 1 9 0v1c0 3.31-4.03 6-9 6z" /></svg></div><h3>Fire &amp; Disaster Response</h3><p>After a fire or disaster, we board up damaged openings to prevent further damage, theft, and weather exposure while you rebuild.</p></div>
+          <div className="perk"><div className="perk-ico"><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" /><polygon points="23 7 16 12 16 7" /><line x1="1" y1="20" x2="23" y2="20" /></svg></div><h3>Construction &amp; Renovation</h3><p>Temporary window and door sealing for construction sites and renovations. Keep the elements out and your project on track.</p></div>
         </div>
       </section>
 
@@ -146,22 +157,17 @@ export default function EmergencyPage() {
             </p>
           </div>
           <div  style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-            <div style={{ background: "var(--white)", border: "1px solid var(--rule)", borderRadius: "var(--radius-md)", padding: "32px 24px", textAlign: "center" }}>
-              <span style={{ fontFamily: "var(--font-d)", fontSize: "2.4rem", fontWeight: 700, color: "var(--accent)", display: "block" }}>1</span>
-              <p style={{ fontSize: ".78rem", color: "rgba(0,0,0,.6)", marginTop: 8, lineHeight: 1.4 }}>Call for<br />everything</p>
-            </div>
-            <div style={{ background: "var(--white)", border: "1px solid var(--rule)", borderRadius: "var(--radius-md)", padding: "32px 24px", textAlign: "center" }}>
-              <span style={{ fontFamily: "var(--font-d)", fontSize: "2.4rem", fontWeight: 700, color: "var(--accent)", display: "block" }}>24/7</span>
-              <p style={{ fontSize: ".78rem", color: "rgba(0,0,0,.6)", marginTop: 8, lineHeight: 1.4 }}>Always<br />available</p>
-            </div>
-            <div style={{ background: "var(--white)", border: "1px solid var(--rule)", borderRadius: "var(--radius-md)", padding: "32px 24px", textAlign: "center" }}>
-              <span style={{ fontFamily: "var(--font-d)", fontSize: "2.4rem", fontWeight: 700, color: "var(--accent)", display: "block" }}>25yr</span>
-              <p style={{ fontSize: ".78rem", color: "rgba(0,0,0,.6)", marginTop: 8, lineHeight: 1.4 }}>Warranty on<br />replacements</p>
-            </div>
-            <div style={{ background: "var(--white)", border: "1px solid var(--rule)", borderRadius: "var(--radius-md)", padding: "32px 24px", textAlign: "center" }}>
-              <span style={{ fontFamily: "var(--font-d)", fontSize: "2.4rem", fontWeight: 700, color: "var(--accent)", display: "block" }}>$0</span>
-              <p style={{ fontSize: ".78rem", color: "rgba(0,0,0,.6)", marginTop: 8, lineHeight: 1.4 }}>Hidden fees<br />or surprises</p>
-            </div>
+            {[
+              { n: "1", l: ["Call for", "everything"] },
+              { n: "24/7", l: ["Always", "available"] },
+              { n: "25yr", l: ["Warranty on", "replacements"] },
+              { n: "$0", l: ["Hidden fees", "or surprises"] },
+            ].map((s, i) => (
+              <div key={i} style={{ background: "var(--white)", border: "1px solid var(--rule)", borderRadius: "var(--radius-md)", padding: "32px 24px", textAlign: "center" }}>
+                <span style={{ fontFamily: "var(--font-d)", fontSize: "2.4rem", fontWeight: 700, color: "var(--accent)", display: "block" }}>{s.n}</span>
+                <p style={{ fontSize: ".78rem", color: "rgba(0,0,0,.6)", marginTop: 8, lineHeight: 1.4 }}>{s.l[0]}<br />{s.l[1]}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -176,7 +182,7 @@ export default function EmergencyPage() {
           </p>
         </div>
         <div style={{ maxWidth: 800, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
-          {["Toronto", "North York", "Etobicoke", "Scarborough", "Mississauga", "Brampton", "Vaughan", "Richmond Hill", "Markham", "Oakville", "Ajax", "Pickering"].map((city, i) => (
+          {["Toronto", "North York", "Etobicoke", "Scarborough", "Mississauga", "Brampton", "Vaughan", "Richmond Hill", "Markham", "Oakville", "Ajax", "Pickering"].map((city) => (
             <span key={city} style={{ display: "inline-block", padding: "10px 22px", border: "1px solid var(--rule)", borderRadius: "var(--radius-pill)", fontSize: ".88rem", color: "rgba(0,0,0,.65)", fontWeight: 400 }}>
               {city}
             </span>
@@ -219,10 +225,58 @@ export default function EmergencyPage() {
         </p>
         <div style={{ marginTop: 32, display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
           <a className="hm-cta-primary" href="tel:4165007610" style={{ textDecoration: "none" }}>Call 416-500-7610 ›</a>
-          <Link href="/contact" className="hm-cta-ghost">Get a free estimate ›</Link>
+          <button className="hm-cta-ghost" onClick={openForm} style={{ border: "none", cursor: "pointer" }}>Get a free estimate ›</button>
         </div>
       </section>
 
     </main>
+
+    {/* ═══ Emergency Form Modal — outside main to avoid stacking context ═══ */}
+    <div
+      className={`quote-modal-overlay${showForm ? " active" : ""}`}
+      onClick={() => setShowForm(false)}
+    >
+      <div className="quote-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="quote-modal-close" onClick={() => setShowForm(false)}>✕</button>
+        <p className="quote-modal-label">Immediate Response</p>
+        <h2 className="quote-modal-title">24/7 Emergency Service</h2>
+        <p className="quote-modal-sub">
+          Fill in your details and our emergency team will contact you immediately.
+        </p>
+
+        {submitted ? (
+          <div style={{ textAlign: "center", padding: "40px 0" }}>
+            <p style={{ fontSize: "1.2rem", fontWeight: 600, color: "var(--accent)" }}>✓ Request Received!</p>
+            <p style={{ fontSize: ".88rem", color: "rgba(0,0,0,.55)", marginTop: 8 }}>
+              Our emergency team will contact you shortly.
+            </p>
+          </div>
+        ) : (
+          <form className="quote-form" onSubmit={handleSubmit}>
+            <input type="text" name="fullName" value={form.fullName} onChange={handleChange} placeholder="Full Name" required />
+            <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email" required />
+            <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="Phone" required />
+            <select name="emergencyType" value={form.emergencyType} onChange={handleChange} required>
+              <option value="" disabled>Type of Emergency</option>
+              <option value="Break-In / Vandalism">Break-In / Vandalism</option>
+              <option value="Storm Damage">Storm Damage</option>
+              <option value="Fire Damage">Fire Damage</option>
+              <option value="Broken Window">Broken Window</option>
+              <option value="Broken Door">Broken Door</option>
+              <option value="Storefront / Commercial">Storefront / Commercial</option>
+              <option value="Board-Up Needed">Board-Up Needed</option>
+              <option value="Other Emergency">Other Emergency</option>
+            </select>
+            <textarea name="message" value={form.message} onChange={handleChange} placeholder="Describe the situation…" rows={3} />
+            {error && <p style={{ color: "#e53e3e", fontSize: ".85rem", margin: 0 }}>{error}</p>}
+            <button type="submit" className="quote-form-submit" disabled={loading}>
+              {loading ? "Sending…" : "Submit Request"}
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+
+    </>
   );
 }

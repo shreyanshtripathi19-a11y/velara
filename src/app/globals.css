@@ -31,8 +31,8 @@
   --notif-h: 0px;
 
   /* Glass tokens */
-  --glass-bg: rgba(255, 255, 255, .92);
-  --glass-bg-heavy: rgba(255, 255, 255, .96);
+  --glass-bg: rgba(255, 255, 255, .82);
+  --glass-bg-heavy: rgba(255, 255, 255, .92);
   --glass-border: rgba(255, 255, 255, .4);
   --glass-border-dark: rgba(0, 0, 0, .08);
   --glass-blur: 24px;
@@ -55,11 +55,11 @@
   --font-b: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
 }
 
-/* Glass utilities */
+/* Glass utilities — Apple-inspired */
 .glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: saturate(180%) blur(var(--glass-blur));
+  -webkit-backdrop-filter: saturate(180%) blur(var(--glass-blur));
   border: 1px solid var(--glass-border-dark);
   border-radius: var(--radius-md);
   box-shadow: var(--glass-shadow);
@@ -78,6 +78,7 @@
   border: 1px solid var(--glass-dark-border);
   border-radius: var(--radius-lg);
 }
+
 
 /* Page transitions */
 @keyframes pgOut {
@@ -422,7 +423,9 @@ a {
 }
 
 main {
-  position: relative
+  position: relative;
+  padding-top: var(--notif-h, 0px);
+  transition: padding-top .3s ease
 }
 
 /* Consistent spacing between content sections */
@@ -556,10 +559,10 @@ video {
   height: 44px;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, .97);
+  background: rgba(255, 255, 255, .6);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border: 1px solid rgba(0, 0, 0, .06);
+  border: 1px solid rgba(255, 255, 255, .5);
   will-change: transform;
   border-radius: var(--radius-pill);
   padding: 0 8px 0 24px;
@@ -569,8 +572,8 @@ video {
 }
 
 .nav-scrolled .nav-inner {
-  background: rgba(255, 255, 255, .98);
-  border-color: rgba(0, 0, 0, .08);
+  background: rgba(255, 255, 255, .82);
+  border-color: rgba(0, 0, 0, .06);
   box-shadow: 0 1px 3px rgba(0, 0, 0, .08), 0 8px 24px rgba(0, 0, 0, .06);
 }
 
@@ -1971,7 +1974,7 @@ div.hm-stats-strip[style*="border"]::after {
 }
 
 .quote-modal {
-  background: rgba(255, 255, 255, .92);
+  background: rgba(255, 255, 255, .72);
   backdrop-filter: blur(40px) saturate(200%);
   -webkit-backdrop-filter: blur(40px) saturate(200%);
   border: 1px solid rgba(255, 255, 255, .8);
@@ -4075,11 +4078,13 @@ video.hm-panel-bg {
 
 .builders-page .hm-panel.builders-street-video video {
   width: 100%;
+  max-width: 100%;
   display: block;
   object-fit: contain;
   background: #FFFFFF;
   padding: 0;
   position: relative;
+  margin: 0 auto;
 }
 
 /* Perk cards on builders page — fast reveal, no lag */
@@ -4670,7 +4675,8 @@ video.hm-panel-bg {
 .pg-gallery {
   background: var(--white);
   padding: clamp(48px, 6vw, 72px) 0;
-  overflow: hidden
+  overflow: hidden;
+  margin-bottom: clamp(40px, 5vw, 64px)
 }
 
 .pg-gallery-head {
@@ -5248,7 +5254,7 @@ video.hm-panel-bg {
   }
 
   .garage-feat .garage-vid {
-    aspect-ratio: 16/9 !important;
+    aspect-ratio: 4/3 !important;
     max-height: none;
     height: auto !important
   }
@@ -8367,6 +8373,9 @@ body.nav-open {
   }
 }
 
+/* Default: show desktop video, hide mobile video */
+.glass-vid-mobile { display: none }
+
 /* ─── TABLET PORTRAIT ≤ 900px ─── */
 @media(max-width:900px) {
 
@@ -8450,12 +8459,11 @@ body.nav-open {
   .door-glass-grid {
     grid-template-columns: 1fr !important
   }
-
   .door-glass-grid .rv-glass-vid {
     aspect-ratio: auto !important;
     height: auto !important;
     overflow: hidden !important;
-    background: #FFFFFF !important;
+    background: transparent !important;
     max-width: 100% !important;
     margin: 0 auto !important;
     border-radius: var(--radius-md) !important
@@ -8465,9 +8473,15 @@ body.nav-open {
     width: 100% !important;
     height: auto !important;
     object-position: center center !important;
-    background: #FFFFFF !important;
-    filter: brightness(1.12) !important
+    background: transparent !important;
+    filter: none !important;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0)
   }
+
+  /* Mobile: swap videos */
+  .glass-vid-desktop { display: none !important }
+  .glass-vid-mobile { display: block !important }
 
   .door-twin-grid {
     grid-template-columns: 1fr !important
@@ -8735,8 +8749,13 @@ body.nav-open {
     gap: 24px !important
   }
 
+  /* Center colour/woodgrain boxes on mobile */
+  .garage-color-boxes {
+    margin: 0 auto !important
+  }
+
   .garage-feat .garage-vid {
-    aspect-ratio: 16/10 !important;
+    aspect-ratio: 4/3 !important;
     max-height: none !important;
     height: auto !important;
     width: 100% !important
@@ -8977,7 +8996,10 @@ body.nav-open {
 
   .builders-street-video video {
     max-height: 50vh !important;
-    height: auto !important
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 auto !important
   }
 
   /* Builders CTA form */

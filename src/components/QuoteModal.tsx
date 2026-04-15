@@ -14,13 +14,18 @@ export default function QuoteModal() {
     if (isOpen) {
       setSubmitted(false);
       setError("");
-      const preselect = category === "Windows" ? "Windows"
+      // Map product names to dropdown values
+      const productOptions = ["Windows", "Entry Doors", "Patio Doors", "Garage Doors", "Multiple Products"];
+      const matchedProduct = productOptions.find(opt => product && opt.toLowerCase() === product.toLowerCase());
+      const preselect = matchedProduct
+        ? matchedProduct
+        : category === "Windows" ? "Windows"
         : category === "Doors" ? "Entry Doors"
         : category === "Garage Doors" ? "Garage Doors"
         : category || "";
       setForm({ fullName: "", email: "", phone: "", product: preselect, message: "" });
     }
-  }, [isOpen, category]);
+  }, [isOpen, category, product]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });

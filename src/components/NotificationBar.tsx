@@ -33,7 +33,7 @@ export default function NotificationBar() {
 
   return (
     <div ref={barRef} id="notif-bar" style={{
-      background: "linear-gradient(135deg, #6c3ce0 0%, #8b5cf6 100%)",
+      background: "var(--accent)",
       color: "#fff",
       textAlign: "center",
       padding: "10px 48px 10px 24px",

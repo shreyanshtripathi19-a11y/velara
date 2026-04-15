@@ -178,10 +178,16 @@ export default function DoorsPage() {
                 </div>
               </div>
             </div>
-            <div className="rv-glass-vid" style={{ aspectRatio: "4/5", overflow: "hidden", borderRadius: "var(--radius-lg)" }}>
-              <video autoPlay muted loop playsInline preload="auto" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(1.12)" }}>
-                <source src="/assets/videos/custom-glass.webm" type="video/webm" />
-                <source src="/assets/videos/custom-glass.mp4" type="video/mp4" />
+            <div className="rv-glass-vid" style={{ aspectRatio: "4/5", overflow: "hidden", borderRadius: "var(--radius-lg)", background: "transparent" }}>
+              {/* Desktop video */}
+              <video className="glass-vid-desktop" autoPlay muted loop playsInline preload="auto" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(1.12)", background: "transparent" }}>
+                <source src="/assets/videos/custom-glass.webm?v=2" type="video/webm" />
+                <source src="/assets/videos/custom-glass.mp4?v=2" type="video/mp4" />
+              </video>
+              {/* Mobile video */}
+              <video className="glass-vid-mobile" autoPlay muted loop playsInline preload="auto" style={{ width: "100%", height: "100%", objectFit: "cover", background: "transparent" }}>
+                <source src="/assets/videos/custom-glass-mobile-sm.webm?v=3" type="video/webm" />
+                <source src="/assets/videos/custom-glass-mobile-sm.mp4?v=3" type="video/mp4" />
               </video>
             </div>
           </div>
@@ -277,7 +283,7 @@ export default function DoorsPage() {
       </section>
 
       {/* ── Stats Bar ── */}
-      <section style={{ padding: "clamp(40px,5vw,64px) 24px", background: "rgba(75,40,109,.03)", borderRadius: "var(--radius-lg)", maxWidth: 1200, margin: "0 auto" }}>
+      <section style={{ padding: "clamp(40px,5vw,64px) 24px", background: "rgba(75,40,109,.03)" }}>
         <div className="door-stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 32, maxWidth: 1000, margin: "0 auto", textAlign: "center" }}>
           {[
             { n: "200+", l: "Configurations" },
@@ -294,7 +300,7 @@ export default function DoorsPage() {
       </section>
 
       {/* ── Timeline ── */}
-      <section style={{ padding: "clamp(48px,5vw,72px) 24px", background: "var(--white)", borderTop: "1px solid var(--rule)" }}>
+      <section style={{ padding: "clamp(48px,5vw,72px) 24px", background: "var(--white)" }}>
         <div className="center" style={{ marginBottom: 36 }}>
           <p className="ch-label sr">Our Process</p>
           <h2 className="ch-h center sr" style={{ color: "var(--accent)" }}>From consultation to <em style={{ color: "var(--accent)", fontStyle: "italic" }}>installation.</em></h2>

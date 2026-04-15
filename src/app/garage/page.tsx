@@ -185,9 +185,9 @@ export default function GaragePage() {
           <div className="sr garage-feat" style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "clamp(32px,4vw,64px)", alignItems: "center" }}>
             <div>
               <p className="ch-label">Customization</p>
-              <h3 className="ch-h" style={{ color: "var(--ink)", marginBottom: 16 }}>Your home.<br /><em style={{ color: "var(--accent)" }}>Your colour.</em></h3>
+              <h3 className="ch-h" style={{ color: "var(--ink)", marginBottom: 16 }}><span style={{ whiteSpace: "nowrap" }}>Your home.</span><br /><em style={{ color: "var(--accent)", whiteSpace: "nowrap" }}>Your colour.</em></h3>
               <p style={{ fontSize: ".95rem", color: "rgba(0,0,0,.6)", lineHeight: 1.8, fontWeight: 300, marginBottom: 24 }}>Over 50 colours and finishes including realistic woodgrain textures that look like real wood but need zero maintenance.</p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, maxWidth: 320 }}>
+              <div className="garage-color-boxes" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, maxWidth: 320 }}>
                 <div style={{ padding: 16, background: "rgba(75,40,109,.04)", borderRadius: "var(--radius-md)", textAlign: "center" }}>
                   <span style={{ fontFamily: "var(--font-d)", fontSize: "1.5rem", fontWeight: 700, color: "var(--accent)", display: "block" }}>50+</span>
                   <span style={{ fontSize: ".68rem", color: "rgba(0,0,0,.45)", textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 500 }}>Colours</span>

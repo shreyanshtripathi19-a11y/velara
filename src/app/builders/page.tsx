@@ -144,7 +144,7 @@ export default function BuildersPage() {
       </section>
 
       {/* ── Why Velara for Builders ── */}
-      <section className="sr" style={{ padding: "clamp(48px,5vw,72px) 24px", background: "var(--white)", borderTop: "1px solid var(--rule)" }}>
+      <section className="sr" style={{ padding: "clamp(48px,5vw,72px) 24px", background: "var(--white)" }}>
         <div className="center" style={{ marginBottom: 0 }}>
           <p className="ch-label">The Velara Advantage</p>
           <h2 className="ch-h center" style={{ color: "var(--accent)" }}>Built for<br /><em style={{ color: "var(--accent)", fontStyle: "italic" }}>builders.</em></h2>
