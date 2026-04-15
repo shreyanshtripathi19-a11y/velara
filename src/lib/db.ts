@@ -43,6 +43,7 @@ function initTables(db: Database.Database) {
       src TEXT NOT NULL,
       alt TEXT DEFAULT '',
       category TEXT DEFAULT 'windows',
+      sortOrder INTEGER DEFAULT 0,
       createdAt TEXT DEFAULT (datetime('now'))
     );
 
@@ -67,6 +68,17 @@ function initTables(db: Database.Database) {
     db.prepare("INSERT INTO settings (key, value) VALUES (?, ?)").run("notification_enabled", "true");
   }
 
+  // Migration: add sortOrder column if missing (existing DBs)
+  try {
+    db.prepare("SELECT sortOrder FROM gallery_images LIMIT 1").get();
+  } catch {
+    db.exec("ALTER TABLE gallery_images ADD COLUMN sortOrder INTEGER DEFAULT 0");
+    // Backfill existing rows with sequential sort order
+    const rows = db.prepare("SELECT id FROM gallery_images ORDER BY createdAt ASC").all() as { id: number }[];
+    const update = db.prepare("UPDATE gallery_images SET sortOrder = ? WHERE id = ?");
+    rows.forEach((row, i) => update.run(i, row.id));
+  }
+
   // Seed existing gallery images if empty
   const imgCount = db.prepare("SELECT COUNT(*) as c FROM gallery_images").get() as { c: number };
   if (imgCount.c === 0) {
@@ -82,9 +94,7 @@ function initTables(db: Database.Database) {
       { src: "/assets/doors/double-door.jpg", alt: "Double entry — Toronto", category: "doors" },
       { src: "/assets/doors/sidelights.jpg", alt: "Sidelights — Etobicoke", category: "doors" },
     ];
-    const stmt = db.prepare("INSERT INTO gallery_images (src, alt, category) VALUES (?, ?, ?)");
-    for (const img of seedImages) {
-      stmt.run(img.src, img.alt, img.category);
-    }
+    const stmt = db.prepare("INSERT INTO gallery_images (src, alt, category, sortOrder) VALUES (?, ?, ?, ?)");
+    seedImages.forEach((img, i) => stmt.run(img.src, img.alt, img.category, i));
   }
 }

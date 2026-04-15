@@ -6,11 +6,11 @@ import fs from "fs";
 
 export const dynamic = "force-dynamic";
 
-// Public GET - for gallery page
+// Public GET - for gallery page (sorted by sortOrder)
 export async function GET() {
   try {
     const db = getDb();
-    const images = db.prepare("SELECT * FROM gallery_images ORDER BY createdAt DESC").all();
+    const images = db.prepare("SELECT * FROM gallery_images ORDER BY sortOrder ASC, createdAt DESC").all();
     return NextResponse.json({ images });
   } catch {
     return NextResponse.json({ images: [] });
@@ -45,13 +45,15 @@ export async function POST(req: NextRequest) {
 
     const src = `/assets/uploads/${filename}`;
 
-    // Save to DB
+    // Save to DB — auto-assign next sort order
     const db = getDb();
-    const result = db.prepare("INSERT INTO gallery_images (src, alt, category) VALUES (?, ?, ?)").run(src, alt, category);
+    const maxOrder = db.prepare("SELECT COALESCE(MAX(sortOrder), -1) as m FROM gallery_images").get() as { m: number };
+    const nextOrder = maxOrder.m + 1;
+    const result = db.prepare("INSERT INTO gallery_images (src, alt, category, sortOrder) VALUES (?, ?, ?, ?)").run(src, alt, category, nextOrder);
 
     return NextResponse.json({
       success: true,
-      image: { id: result.lastInsertRowid, src, alt, category },
+      image: { id: result.lastInsertRowid, src, alt, category, sortOrder: nextOrder },
     });
   } catch (err) {
     console.error("Upload error:", err);
@@ -85,5 +87,28 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Delete failed" }, { status: 500 });
+  }
+}
+
+// Reorder images (drag-and-drop)
+export async function PATCH(req: NextRequest) {
+  try {
+    verifyAdmin(req);
+    const { orderedIds } = await req.json() as { orderedIds: number[] };
+
+    if (!Array.isArray(orderedIds) || orderedIds.length === 0) {
+      return NextResponse.json({ error: "orderedIds required" }, { status: 400 });
+    }
+
+    const db = getDb();
+    const stmt = db.prepare("UPDATE gallery_images SET sortOrder = ? WHERE id = ?");
+    const updateAll = db.transaction((ids: number[]) => {
+      ids.forEach((id, index) => stmt.run(index, id));
+    });
+    updateAll(orderedIds);
+
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Reorder failed" }, { status: 500 });
   }
 }
