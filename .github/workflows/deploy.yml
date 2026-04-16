@@ -1,0 +1,78 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: 22
+          script_stop: true
+          command_timeout: 10m
+          script: |
+            set -e
+            cd /var/www/velara
+            TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+            echo "═══ BACKUP ═══"
+            BACKUP_DIR="/root/velara-backups/$TIMESTAMP"
+            mkdir -p "$BACKUP_DIR"
+
+            # Backup database
+            if [ -f data/velara.db ]; then
+              cp data/velara.db "$BACKUP_DIR/velara.db"
+              cp data/velara.db-wal "$BACKUP_DIR/velara.db-wal" 2>/dev/null || true
+              cp data/velara.db-shm "$BACKUP_DIR/velara.db-shm" 2>/dev/null || true
+              echo "💾 Database backed up"
+            fi
+
+            # Backup uploads
+            if [ -d public/assets/uploads ] && [ "$(ls -A public/assets/uploads 2>/dev/null)" ]; then
+              cp -r public/assets/uploads "$BACKUP_DIR/uploads"
+              echo "📁 Uploads backed up"
+            fi
+
+            # Backup .env.local
+            if [ -f .env.local ]; then
+              cp .env.local "$BACKUP_DIR/.env.local"
+              echo "🔑 Env backed up"
+            fi
+
+            # Keep only last 10 backups
+            ls -dt /root/velara-backups/*/ 2>/dev/null | tail -n +11 | xargs rm -rf 2>/dev/null || true
+
+            echo "═══ PULL LATEST CODE ═══"
+            # Save protected files
+            cp .env.local /tmp/velara-env-backup 2>/dev/null || true
+
+            git fetch origin main
+            git reset --hard origin/main
+
+            # Restore protected files
+            cp /tmp/velara-env-backup .env.local 2>/dev/null || true
+
+            # Ensure protected dirs exist
+            mkdir -p data
+            mkdir -p public/assets/uploads
+
+            echo "═══ INSTALL & BUILD ═══"
+            npm ci --production=false
+            npx next build
+
+            echo "═══ RESTART ═══"
+            pm2 restart velara
+            echo "✅ DEPLOYED OK — backup at $BACKUP_DIR"
