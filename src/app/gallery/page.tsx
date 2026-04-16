@@ -1,11 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 interface GalleryImage { id: number; src: string; alt: string; category: string }
 
-const fallbackImages = [
+const fallbackImages: GalleryImage[] = [
   { id: 1, src: "/assets/reviews/project-1.jpg", alt: "Window installation — Oakville", category: "windows" },
   { id: 2, src: "/assets/doors/entry-door.jpg", alt: "Entry door — Vaughan", category: "doors" },
   { id: 3, src: "/assets/reviews/project-2.jpg", alt: "Casement windows — Mississauga", category: "windows" },
@@ -22,6 +22,9 @@ const filters = ["all", "windows", "doors", "garage"] as const;
 const filterLabels: Record<string, string> = { all: "All Projects", windows: "Windows", doors: "Doors", garage: "Garage Doors" };
 const sizes = ["xl", "lg", "lg", "xl", "xl", "lg", "lg", "xl", "xl", "lg", "lg", "xl", "xl", "lg"];
 
+/* Column stagger offsets (px) — cycles for visual variety */
+const staggerOffsets = [40, 0, 70, 20, 90, 10, 55];
+
 export default function GalleryPage() {
   useScrollReveal();
   const [activeCat, setActiveCat] = useState<string>("all");
@@ -34,20 +37,37 @@ export default function GalleryPage() {
       .catch(() => {});
   }, []);
 
-  const filtered = activeCat === "all" ? galImages : galImages.filter(i => i.category === activeCat);
+  const filtered = useMemo(
+    () => activeCat === "all" ? galImages : galImages.filter(i => i.category === activeCat),
+    [activeCat, galImages],
+  );
 
-  /* Build 7 columns × 2 cards, duplicated for seamless loop */
-  const columns: { src: string; alt: string; size: string }[][] = [];
-  for (let c = 0; c < 7; c++) {
-    const col: { src: string; alt: string; size: string }[] = [];
-    for (let r = 0; r < 2; r++) {
-      if (filtered.length === 0) break;
-      const img = filtered[(c * 2 + r) % filtered.length];
-      const sz = sizes[(c * 2 + r) % sizes.length];
-      col.push({ src: img.src, alt: img.alt, size: sz });
+  /* ── Build columns dynamically: every image gets a slot, order preserved ── */
+  const CARDS_PER_COL = 2;
+  const columns = useMemo(() => {
+    if (filtered.length === 0) return [];
+    // At minimum 7 columns (looks good visually); otherwise enough to fit every image
+    const neededCols = Math.max(7, Math.ceil(filtered.length / CARDS_PER_COL));
+    const cols: { src: string; alt: string; size: string }[][] = [];
+    for (let c = 0; c < neededCols; c++) {
+      const col: { src: string; alt: string; size: string }[] = [];
+      for (let r = 0; r < CARDS_PER_COL; r++) {
+        const imgIdx = c * CARDS_PER_COL + r;
+        if (imgIdx >= filtered.length) break; // don't repeat — show only real images
+        const img = filtered[imgIdx];
+        const sz = sizes[(c * CARDS_PER_COL + r) % sizes.length];
+        col.push({ src: img.src, alt: img.alt, size: sz });
+      }
+      if (col.length > 0) cols.push(col);
     }
-    columns.push(col);
-  }
+    return cols;
+  }, [filtered]);
+
+  /* Scale scroll speed so it doesn't fly when there are many columns */
+  const scrollDuration = useMemo(() => {
+    const baseDuration = 60; // seconds for 7 cols
+    return Math.max(baseDuration, columns.length * (baseDuration / 7));
+  }, [columns.length]);
 
   return (
     <div>
@@ -77,10 +97,18 @@ export default function GalleryPage() {
       <div className="gal-mosaic" id="gal-mosaic">
         <div className="gal-fade-l" />
         <div className="gal-fade-r" />
-        <div className="gal-mosaic-drift" key={activeCat}>
-          {/* Original columns */}
+        <div
+          className="gal-mosaic-drift"
+          key={activeCat}
+          style={{ animationDuration: `${scrollDuration}s` }}
+        >
+          {/* Original columns — shows every image */}
           {columns.map((col, ci) => (
-            <div className="gal-mosaic-col" key={`a-${ci}`}>
+            <div
+              className="gal-mosaic-col"
+              key={`a-${ci}`}
+              style={{ paddingTop: staggerOffsets[ci % staggerOffsets.length] }}
+            >
               {col.map((card, ri) => (
                 <div className={`gal-m-card gal-m-${card.size}`} key={ri}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -89,9 +117,13 @@ export default function GalleryPage() {
               ))}
             </div>
           ))}
-          {/* Duplicate for seamless loop */}
+          {/* Duplicate for seamless infinite loop */}
           {columns.map((col, ci) => (
-            <div className="gal-mosaic-col" key={`b-${ci}`}>
+            <div
+              className="gal-mosaic-col"
+              key={`b-${ci}`}
+              style={{ paddingTop: staggerOffsets[ci % staggerOffsets.length] }}
+            >
               {col.map((card, ri) => (
                 <div className={`gal-m-card gal-m-${card.size}`} key={ri}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
