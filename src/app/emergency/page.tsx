@@ -39,7 +39,7 @@ export default function EmergencyPage() {
       setSubmitted(true);
       setTimeout(() => { setSubmitted(false); setShowForm(false); }, 3000);
     } catch {
-      setError("Something went wrong. Please call us at 416-500-7610.");
+      setError("Something went wrong. Please call us at 416-333-9525.");
     } finally {
       setLoading(false);
     }
@@ -66,7 +66,7 @@ export default function EmergencyPage() {
           Fast, reliable emergency board-up and glass replacement for homes and businesses across the GTA. Available around the clock — because emergencies don&apos;t wait.
         </p>
         <div style={{ marginTop: 32, display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-          <a className="hm-cta-primary" href="tel:4165007610" style={{ textDecoration: "none" }}>Call now — 416-500-7610 ›</a>
+          <a className="hm-cta-primary" href="tel:4163339525" style={{ textDecoration: "none" }}>Call now — 416-333-9525 ›</a>
           <button className="hm-cta-ghost" onClick={openForm} style={{ border: "none", cursor: "pointer" }}>Get a free estimate ›</button>
         </div>
       </section>
@@ -224,7 +224,7 @@ export default function EmergencyPage() {
           Don&apos;t wait. Our emergency team is standing by 24/7 to secure your property and get you back to normal — fast.
         </p>
         <div style={{ marginTop: 32, display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-          <a className="hm-cta-primary" href="tel:4165007610" style={{ textDecoration: "none" }}>Call 416-500-7610 ›</a>
+          <a className="hm-cta-primary" href="tel:4163339525" style={{ textDecoration: "none" }}>Call 416-333-9525 ›</a>
           <button className="hm-cta-ghost" onClick={openForm} style={{ border: "none", cursor: "pointer" }}>Get a free estimate ›</button>
         </div>
       </section>
